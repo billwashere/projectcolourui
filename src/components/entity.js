@@ -10,7 +10,7 @@ import {
     Create,
     Datagrid,
     ReferenceField,
-    //ReferenceManyField,
+    ReferenceManyField,
     TextField,
     EditButton,
     ReferenceInput,
@@ -49,21 +49,20 @@ export const EntityList = props => (
             <ReferenceField label="Entity Type" source="entity_type_id" reference="entity_type">
                 <TextField source="name" />
             </ReferenceField>
-            {/*
-            <ReferenceManyField
-                label="Comments"
-                reference="comments"
-                target="postId"
+            
+           {/*<ReferenceManyField
+                label="Asspicated To"
+                reference="assoication"
+                target="entitya_id"
             >
                 <Datagrid>
-                    <DateField source="created_at" />
-                    <TextField source="comment" />
-                    <ReferenceField label="User" source="userId" reference="users">
+                <TextField source="assoication_type_id" />
+                    <ReferenceField label="Name" source="entityb_id" reference="entity">
                         <TextField source="name" />
                     </ReferenceField>
                     <EditButton />
                 </Datagrid>
-</ReferenceManyField>*/}
+           </ReferenceManyField>*/}
             <TextField source="name" />
             <DateField label="Start Date" source="start_date" />
             <DateField label="End Date" source="end_date" />
@@ -74,7 +73,7 @@ export const EntityList = props => (
 );
 
 const EntityTitle = ({ record }) => {
-    return <span>Post {record ? `"${record.name}"` : ''}</span>;
+    return <span>Entity {record ? `"${record.name}"` : ''}</span>;
 };
 
 export const EntityEdit = props => (
@@ -103,12 +102,64 @@ export const EntityCreate = props => (
 );
 
 export const EntityShow = props => (
-    <Show {...props}>
+    <Show title={<EntityTitle />} {...props}>
         <SimpleShowLayout>
             <TextField source="name" />
             <TextField source="entity_type_id" />
             <DateField label="Start Date" source="start_date" />
             <DateField label="End Date" source="end_date" />
+            <ReferenceManyField
+                label="Assoication To"
+                reference="assoication"
+                target="entitya_id"
+            >
+                <Datagrid>
+                <TextField source="assoication_type_id" />
+                <ReferenceField label="Assoication Type" source="assoication_type_id" reference="assoication_type">
+                <TextField source="name" />
+            </ReferenceField>
+                    <ReferenceField label="Name" source="entityb_id" reference="entity">
+                        <TextField source="name" />
+                    </ReferenceField>
+                    <TextField source="start_date" />
+                    <TextField source="end_date" />
+                    <EditButton />
+                </Datagrid>
+</ReferenceManyField>
+<ReferenceManyField
+                label="Assoication from"
+                reference="assoication"
+                target="entityb_id"
+            >
+                <Datagrid>
+                <TextField source="assoication_type_id" />
+                <ReferenceField label="Assoication Type" source="assoication_type_id" reference="assoication_type">
+                <TextField source="name" />
+            </ReferenceField>
+                    <ReferenceField label="Name" source="entitya_id" reference="entity">
+                        <TextField source="name" />
+                    </ReferenceField>
+                    <TextField source="start_date" />
+                    <TextField source="end_date" />
+                    <EditButton />
+                </Datagrid>
+</ReferenceManyField>
+<ReferenceManyField
+                label="Cost Rates"
+                reference="loaded_cost"
+                target="entity_id"
+            >
+                <Datagrid>
+                <TextField source="cost" />
+                <TextField source="currency" />
+                {/*<ReferenceField source="currency" reference="currencies">
+                        <TextField source="Entity" />
+                    </ReferenceField> */}
+                    <TextField source="start_date" />
+                    <TextField source="end_date" />
+                    <EditButton />
+                </Datagrid>
+</ReferenceManyField>
         </SimpleShowLayout>
     </Show>
 );
