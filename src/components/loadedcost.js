@@ -3,14 +3,12 @@ import {
     Show,
     ShowButton,
     SimpleShowLayout,
-   // RichTextField,
     DateInput,
     List,
     Edit,
     Create,
     Datagrid,
     ReferenceField,
-    //ReferenceManyField,
     TextField,
     EditButton,
     ReferenceInput,
@@ -20,30 +18,15 @@ import {
     Filter,
 } from 'react-admin';
 //fix me
-const Loaded_costFilter = props => (
+const LoadedCostFilter = props => (
     <Filter {...props}>
          <TextInput label="Search" source="id" alwaysOn />
-        {/*<ReferenceInput
-            label="Loaded_cost"
-            source="id"
-            reference="Loaded_cost"
-            allowEmpty
-        >
-            <SelectInput optionText="name" />
-        </ReferenceInput>
-        <ReferenceInput
-            label="Loaded_cost_type"
-            source="Loaded_cost_type_id"
-            reference="Loaded_cost_type"
-            allowEmpty
-        >
-            <SelectInput optionText="name" />
-        </ReferenceInput>*/}
+       
     </Filter>
 );
 
-export const Loaded_costList = props => (
-    <List {...props} filters={<Loaded_costFilter />}>
+export const LoadedCostList = props => (
+    <List {...props} filters={<LoadedCostFilter />}>
         <Datagrid>
             <TextField source="id" />
             <ReferenceField label="Entity" source="entity_id" reference="entity">
@@ -52,24 +35,8 @@ export const Loaded_costList = props => (
             <TextField source="cost" />
             <ReferenceField label="Currency" source="currency" reference="currency">
                 <TextField source="entity" />
-            </ReferenceField>    
-            <TextField source="level" />           
-
-            {/*
-            <ReferenceManyField
-                label="Comments"
-                reference="comments"
-                target="postId"
-            >
-                <Datagrid>
-                    <DateField source="created_at" />
-                    <TextField source="comment" />
-                    <ReferenceField label="User" source="userId" reference="users">
-                        <TextField source="name" />
-                    </ReferenceField>
-                    <EditButton />
-                </Datagrid>
-</ReferenceManyField>*/}
+            </ReferenceField> 
+            <TextField source="level" />   
             <TextField label="Start Date" source="start_date" />
             <TextField label="End Date" source="end_date" />
             <EditButton />
@@ -87,7 +54,10 @@ export const Loaded_costEdit = props => (
         <SimpleForm>
             <TextInput source="id" />
             <TextInput source="cost" />
-            <TextInput source="currency" />
+            <ReferenceInput label="Currency" source="currency" reference="currency">
+                <SelectInput optionText="entity" />
+            </ReferenceInput>
+            <TextInput source="level" />
             <DateInput label="Start Date" source="start_date" />
             <DateInput label="End Date" source="end_date" />
         </SimpleForm>
@@ -100,7 +70,11 @@ export const Loaded_costCreate = props => (
         <ReferenceInput label="Entity" source="entity_id" reference="entity">
                 <SelectInput optionText="name" />
             </ReferenceInput>
+            <ReferenceInput label="Currency" source="currency" reference="currency">
+                <SelectInput optionText="entity" />
+            </ReferenceInput>
             <TextInput source="cost" />
+            <TextInput source="level" />
             <DateInput label="Start Date" source="start_date" />
             <DateInput label="End Date" source="end_date" />
             

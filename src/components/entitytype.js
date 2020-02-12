@@ -3,52 +3,34 @@ import {
     Show,
     ShowButton,
     SimpleShowLayout,
-   // RichTextField,
-    DateField,
     List,
     Edit,
     Create,
     Datagrid,
-    ReferenceField,
-    //ReferenceManyField,
     TextField,
     EditButton,
-    ReferenceInput,
-    SelectInput,
     SimpleForm,
     TextInput,
     Filter,
 } from 'react-admin';
 //fix me
-const EntityFilter = props => (
+const Entity_typeFilter = props => (
     <Filter {...props}>
          <TextInput label="Search" source="id" alwaysOn />
-        <ReferenceInput
-            label="entity"
-            source="id"
-            reference="entity"
-            allowEmpty
-        >
-            <SelectInput optionText="name" />
-        </ReferenceInput>
-        <ReferenceInput
-            label="entity_type"
-            source="entity_type_id"
-            reference="entity_type"
-            allowEmpty
-        >
-            <SelectInput optionText="name" />
-        </ReferenceInput>
+       
     </Filter>
 );
 
-export const EntityList = props => (
-    <List {...props} filters={<EntityFilter />}>
+export const Entity_typeList = props => (
+    <List {...props} filters={<Entity_typeFilter />}>
         <Datagrid>
             <TextField source="id" />
-            <ReferenceField label="Entity Type" source="entity_type_id" reference="entity_type">
-                <TextField source="name" />
-            </ReferenceField>
+           
+            <TextField source="name" />  
+            <TextField source="created" /> 
+            <TextField source="updated" />  
+            {/* <TextField source="level" />            */}
+
             {/*
             <ReferenceManyField
                 label="Comments"
@@ -64,51 +46,41 @@ export const EntityList = props => (
                     <EditButton />
                 </Datagrid>
 </ReferenceManyField>*/}
-            <TextField source="name" />
-            <DateField label="Start Date" source="start_date" />
-            <DateField label="End Date" source="end_date" />
+           
             <EditButton />
             <ShowButton />
         </Datagrid>
     </List>
 );
 
-const EntityTitle = ({ record }) => {
-    return <span>Post {record ? `"${record.name}"` : ''}</span>;
+const Entity_typeTitle = ({ record }) => {
+    return <span>Entity Type {record ? `"${record.name}"` : ''}</span>;
 };
 
-export const EntityEdit = props => (
-    <Edit title={<EntityTitle />} {...props}>
+export const Entity_typeEdit = props => (
+    <Edit title={<Entity_typeTitle />} {...props}>
         <SimpleForm>
-            <TextInput source="id" />
-            <ReferenceInput label="Entity Type" source="entity_type_id" reference="entity_type">
-                <SelectInput optionText="name" />
-            </ReferenceInput>
+            <TextInput source="id" disabled />
             <TextInput source="name" />
         </SimpleForm>
     </Edit>
 );
 
-export const EntityCreate = props => (
+export const Entity_typeCreate = props => (
     <Create {...props}>
         <SimpleForm>
-            <ReferenceInput label="Entity Type" source="entity_type_id" reference="entity_type">
-                <SelectInput optionText="name" />
-            </ReferenceInput>
+        
             <TextInput source="name" />
-            <DateField label="Start Date" source="start_date" />
-            <DateField label="End Date" source="end_date" />
+            
         </SimpleForm>
     </Create>
 );
 
-export const EntityShow = props => (
+export const Entity_typeShow = props => (
     <Show {...props}>
         <SimpleShowLayout>
+        <TextField source="id" />
             <TextField source="name" />
-            <TextField source="entity_type_id" />
-            <DateField label="Start Date" source="start_date" />
-            <DateField label="End Date" source="end_date" />
         </SimpleShowLayout>
     </Show>
 );
