@@ -31,6 +31,12 @@ import {
   AssoicationShow,
   AssoicationEdit
 } from "./components/assoication";
+import {
+    AllocationCreate,
+    AllocationEdit,
+    AllocationList,
+    AllocationShow
+  } from "./components/allocation";
 import authProvider from "./authProvider";
 import dashboard from "./components/dashboard";
 
@@ -62,7 +68,11 @@ const App = () => (
       edit={AssoicationEdit}
       show={AssoicationShow}
     />
-    <Resource name="allocation" list={ListGuesser} />
+    <Resource name="allocation"       
+    list={AllocationList}
+      create={AllocationCreate}
+      edit={AllocationEdit}
+      show={AllocationShow} />
     <Resource
       name="entity_type"
       list={Entity_typeList}
