@@ -61,21 +61,6 @@ export const AssoicationList = props => (
       <ReferenceField label="Entity To" source="entityb_id" reference="entity">
         <TextField source="name" />
       </ReferenceField>
-      {/*
-            <ReferenceManyField
-                label="Comments"
-                reference="comments"
-                target="postId"
-            >
-                <Datagrid>
-                    <DateField source="created_at" />
-                    <TextField source="comment" />
-                    <ReferenceField label="User" source="userId" reference="users">
-                        <TextField source="name" />
-                    </ReferenceField>
-                    <EditButton />
-                </Datagrid>
-</ReferenceManyField>*/}
       <TextField source="name" />
       <DateField label="Start Date" source="start_date" />
       <DateField label="End Date" source="end_date" />
