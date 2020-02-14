@@ -43,11 +43,18 @@ import dashboard from "./components/dashboard";
 import AttachMoneyIcon from "@material-ui/icons/AttachMoney";
 import MonetizationOnRoundedIcon from "@material-ui/icons/MonetizationOnRounded";
 //import UserIcon from '@material-ui/icons/People';
+import { createMuiTheme } from '@material-ui/core/styles';
+
+const theme = createMuiTheme({
+  palette: {
+    type: 'light', // Switching the dark mode on is a single property value change.
+  },
+});
 
 const hasuraUrl = "https://colourppm.herokuapp.com";
 const headers = {};
 const App = () => (
-  <Admin
+  <Admin theme={theme}
     dataProvider={hasuraDataProvider(hasuraUrl, headers)}
     authProvider={authProvider}
     dashboard={dashboard}
