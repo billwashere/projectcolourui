@@ -8,7 +8,7 @@
     "@testing-library/user-event": "^7.2.1",
     "prop-types": "^15.7.2",
     "ra-data-hasura": "0.0.7",
-    "ra-data-hasura-graphql": "github:Steams/ra-data-hasura-graphql",
+    "ra-data-hasura-graphql": "^0.1.9",
     "react": "^16.12.0",
     "react-admin": "^3.1.4",
     "react-dom": "^16.12.0",

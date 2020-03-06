@@ -1,6 +1,6 @@
-import React from "react";
+import React, { Component }  from "react";
 import { Admin, Resource, ListGuesser } from "react-admin";
-import hasuraDataProvider from "ra-data-hasura";
+import buildHasuraProvider from "ra-data-hasura-graphql";
 import {
   EntityList,
   EntityCreate,
@@ -32,77 +32,99 @@ import {
   AssoicationEdit
 } from "./components/assoication";
 import {
-    AllocationCreate,
-    AllocationEdit,
-    AllocationList,
-    AllocationShow
-  } from "./components/allocation";
+  AllocationCreate,
+  AllocationEdit,
+  AllocationList,
+  AllocationShow
+} from "./components/allocation";
 import authProvider from "./authProvider";
 import dashboard from "./components/dashboard";
 
 import AttachMoneyIcon from "@material-ui/icons/AttachMoney";
 import MonetizationOnRoundedIcon from "@material-ui/icons/MonetizationOnRounded";
 //import UserIcon from '@material-ui/icons/People';
-import { createMuiTheme } from '@material-ui/core/styles';
+import { createMuiTheme } from "@material-ui/core/styles";
 
 const theme = createMuiTheme({
   palette: {
-    type: 'light', // Switching the dark mode on is a single property value change.
-  },
+    type: "light" // Switching the dark mode on is a single property value change.
+  }
 });
 
-const hasuraUrl = "https://colourppm.herokuapp.com";
+const hasuraUrl = "http://colour.heisamachine.com/v1/graphql";
 const headers = {};
-const App = () => (
-  <Admin theme={theme}
-    dataProvider={hasuraDataProvider(hasuraUrl, headers)}
-    authProvider={authProvider}
-    dashboard={dashboard}
-  >
-    <Resource name="vw_d_allocation" list={ListGuesser} />
+class App extends Component {
+  constructor() {
+    super();
+    this.state = { dataProvider: null };
+  }
+  componentDidMount() {
+    buildHasuraProvider({
+      clientOptions: { uri: hasuraUrl }
+    }).then(dataProvider => this.setState({ dataProvider }));
+  }
+  render() {
+    const { dataProvider } = this.state;
 
-    <Resource
-      name="entity"
-      list={EntityList}
-      create={EntityCreate}
-      edit={EntityEdit}
-      show={EntityShow}
-    />
-    <Resource
-      name="assoication"
-      list={AssoicationList}
-      create={AssoicationCreate}
-      edit={AssoicationEdit}
-      show={AssoicationShow}
-    />
-    <Resource name="allocation"       
-    list={AllocationList}
-      create={AllocationCreate}
-      edit={AllocationEdit}
-      show={AllocationShow} />
-    <Resource
-      name="entity_type"
-      list={Entity_typeList}
-      create={Entity_typeCreate}
-      edit={Entity_typeEdit}
-      show={Entity_typeShow}
-    />
-    <Resource
-      name="assoication_type"
-      list={Assoication_typeList}
-      create={Assoication_typeCreate}
-      edit={Assoication_typeEdit}
-      show={Assoication_typeShow}
-    />
-    <Resource
-      name="loaded_cost"
-      icon={MonetizationOnRoundedIcon}
-      create={Loaded_costCreate}
-      list={LoadedCostList}
-      show={Loaded_costShow}
-      edit={Loaded_costEdit}
-    />
-    <Resource name="currency" icon={AttachMoneyIcon} list={ListGuesser} />
-  </Admin>
-);
+    if (!dataProvider) {
+      return <div>Loading</div>;
+    }
+    return (
+      <Admin
+        theme={theme}
+        dataProvider={dataProvider}
+        authProvider={authProvider}
+        dashboard={dashboard}
+      >
+        <Resource name="vw_d_allocation" list={ListGuesser} />
+
+        <Resource
+          name="entity"
+          list={EntityList}
+          create={EntityCreate}
+          edit={EntityEdit}
+          show={EntityShow}
+        />
+        <Resource
+          name="assoication"
+          list={AssoicationList}
+          create={AssoicationCreate}
+          edit={AssoicationEdit}
+          show={AssoicationShow}
+        />
+        <Resource
+          name="allocation"
+          list={AllocationList}
+          create={AllocationCreate}
+          edit={AllocationEdit}
+          show={AllocationShow}
+        />
+        <Resource
+          name="entity_type"
+          list={Entity_typeList}
+          create={Entity_typeCreate}
+          edit={Entity_typeEdit}
+          show={Entity_typeShow}
+        />
+        <Resource
+          name="assoication_type"
+          list={Assoication_typeList}
+          create={Assoication_typeCreate}
+          edit={Assoication_typeEdit}
+          show={Assoication_typeShow}
+        />
+        <Resource
+          name="loaded_cost"
+          icon={MonetizationOnRoundedIcon}
+          create={Loaded_costCreate}
+          list={LoadedCostList}
+          show={Loaded_costShow}
+          edit={Loaded_costEdit}
+        />
+        <Resource name="currency" icon={AttachMoneyIcon} list={ListGuesser} />
+      </Admin>
+    );
+  }
+}
+
 export default App;
