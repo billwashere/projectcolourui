@@ -61,7 +61,7 @@ export const AssoicationList = props => (
       <ReferenceField label="Entity To" source="entityb_id" reference="entity">
         <TextField source="name" />
       </ReferenceField>
-      <TextField source="name" />
+      
       <DateField label="Start Date" source="start_date" />
       <DateField label="End Date" source="end_date" />
       <EditButton />
@@ -85,7 +85,7 @@ export const AssoicationEdit = props => (
       >
         <SelectInput optionText="name" />
       </ReferenceInput>
-      <TextInput source="name" />
+     
     </SimpleForm>
   </Edit>
 );
@@ -100,7 +100,6 @@ export const AssoicationCreate = props => (
       >
         <SelectInput optionText="name" />
       </ReferenceInput>
-      <TextInput source="name" />
       <TextInput label="Start Date" source="start_date" />
       <TextInput label="End Date" source="end_date" />
       <ReferenceInput
@@ -120,7 +119,6 @@ export const AssoicationCreate = props => (
 export const AssoicationShow = props => (
   <Show {...props}>
     <SimpleShowLayout>
-      <TextField source="name" />
       <TextField source="Assoication_type_id" />
       <DateField label="Start Date" source="start_date" />
       <DateField label="End Date" source="end_date" />
