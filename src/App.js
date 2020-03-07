@@ -1,4 +1,5 @@
 import React, { Component }  from "react";
+import history from "./utils/history";
 import { Admin, Resource, ListGuesser } from "react-admin";
 import buildHasuraProvider from "ra-data-hasura-graphql";
 import {
@@ -51,7 +52,7 @@ const theme = createMuiTheme({
   }
 });
 
-const hasuraUrl = "http://colour.heisamachine.com/v1/graphql";
+const hasuraUrl = "https://colour.heisamachine.com/v1/graphql";
 const headers = {};
 class App extends Component {
   constructor() {
@@ -71,9 +72,10 @@ class App extends Component {
     }
     return (
       <Admin
+        history={history}
         theme={theme}
         dataProvider={dataProvider}
-        authProvider={authProvider}
+        authProvider={authProvider({name:'demo'})}
         dashboard={dashboard}
       >
         <Resource name="vw_d_allocation" list={ListGuesser} />
