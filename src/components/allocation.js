@@ -15,7 +15,17 @@ import {
   EditButton,
   SimpleForm,
   TextInput,
-  Filter
+  Filter,
+  required,
+  minLength,
+  maxLength,
+  minValue,
+  maxValue,
+  number,
+  regex,
+  email,
+  choices,
+  AutocompleteInput
 } from "react-admin";
 //fix me
 const AllocationFilter = props => (
@@ -54,11 +64,23 @@ export const AllocationEdit = props => (
   <Edit title={<AllocationTitle />} {...props}>
     <SimpleForm>
       <TextInput source="id" disabled />
-      <ReferenceInput label="Entity A" source="entity_id" reference="entity">
-        <SelectInput optionText="name" />
+      <ReferenceInput
+        filter={{ entity_type_id: 2 }}
+        label="Entity A"
+        source="entity_id"
+        reference="entity"
+        filterToQuery={searchText => ({ name: searchText })}
+      >
+        <AutocompleteInput optionText="name" />
       </ReferenceInput>
-      <ReferenceInput label="Entity b" source="entityb_id" reference="entity">
-        <SelectInput optionText="name" />
+      <ReferenceInput
+        filter={{ entity_type_id: [3, 7] }}
+        label="Entity b"
+        source="entityb_id"
+        reference="entity"
+        filterToQuery={searchText => ({ name: searchText })}
+      >
+        <AutocompleteInput optionText="name" />
       </ReferenceInput>
       <DateInput source="start_date" />
       <DateInput source="end_date" />
@@ -71,16 +93,36 @@ export const AllocationEdit = props => (
 export const AllocationCreate = props => (
   <Create {...props}>
     <SimpleForm>
-      <ReferenceInput label="Entity A" source="entity_id" reference="entity">
-        <SelectInput optionText="name" />
+      <ReferenceInput
+        filter={{ entity_type_id: 2 }}
+        label="Entity A"
+        source="entity_id"
+        reference="entity"
+        filterToQuery={searchText => ({ name: searchText })}
+      >
+        <AutocompleteInput optionText="name" />
       </ReferenceInput>
-      <ReferenceInput label="Entity b" source="entityb_id" reference="entity">
-        <SelectInput optionText="name" />
+      <ReferenceInput
+        filter={{ entity_type_id: [3, 7] }}
+        label="Entity b"
+        source="entityb_id"
+        reference="entity"
+        filterToQuery={searchText => ({ name: searchText })}
+      >
+        <AutocompleteInput optionText="name" />
       </ReferenceInput>
       <DateInput source="start_date" />
       <DateInput source="end_date" />
-      <TextInput source="allocation" />
-      <TextInput source="commitment" />
+      <TextInput
+        source="allocation"
+        validate={[required(), number(), minValue(0), maxValue(1)]}
+        defaultValue={1}
+      />
+      <TextInput
+        source="commitment"
+        defaultValue={100}
+        validate={[required(), number(), minValue(0), maxValue(100)]}
+      />
     </SimpleForm>
   </Create>
 );
