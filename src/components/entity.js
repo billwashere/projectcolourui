@@ -13,6 +13,7 @@ import {
   ReferenceManyField,
   TextField,
   EditButton,
+  CloneButton,
   ReferenceInput,
   SelectInput,
   SimpleForm,
@@ -137,6 +138,7 @@ export const EntityShow = props => (
           <TextField source="start_date" />
           <TextField source="end_date" />
           <EditButton />
+          <CloneButton />
         </Datagrid>
       </ReferenceManyField>
       <ReferenceManyField
@@ -174,6 +176,7 @@ export const EntityShow = props => (
           <TextField source="start_date" />
           <TextField source="end_date" />
           <EditButton />
+          <CloneButton />
         </Datagrid>
       </ReferenceManyField>
       <ReferenceManyField
@@ -205,6 +208,7 @@ export const EntityShow = props => (
           <TextField source="start_date" />
           <TextField source="end_date" />
           <EditButton />
+          <CloneButton />
         </Datagrid>
       </ReferenceManyField>
     </SimpleShowLayout>

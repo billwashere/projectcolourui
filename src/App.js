@@ -38,12 +38,15 @@ import {
   AllocationList,
   AllocationShow
 } from "./components/allocation";
+
+import {ExceptionList} from './components/exception'
+import {UserList,UserEdit, UserCreate, UserShow} from './components/users'
 import authProvider from "./authProvider";
 import dashboard from "./components/dashboard";
 
 import AttachMoneyIcon from "@material-ui/icons/AttachMoney";
 import MonetizationOnRoundedIcon from "@material-ui/icons/MonetizationOnRounded";
-//import UserIcon from '@material-ui/icons/People';
+import UserIcon from '@material-ui/icons/People';
 import { createMuiTheme } from "@material-ui/core/styles";
 
 const theme = createMuiTheme({
@@ -53,7 +56,6 @@ const theme = createMuiTheme({
 });
 
 const hasuraUrl = "https://colour.heisamachine.com/v1/graphql";
-const headers = {};
 class App extends Component {
   constructor() {
     super();
@@ -75,10 +77,10 @@ class App extends Component {
         history={history}
         theme={theme}
         dataProvider={dataProvider}
-        authProvider={authProvider({name:'demo'})}
+        authProvider={authProvider}
         dashboard={dashboard}
       >
-        <Resource name="vw_d_allocation" list={ListGuesser} />
+        <Resource label="Exceptions" name="vs_allocation_exception" list={ExceptionList} />
 
         <Resource
           name="entity"
@@ -124,6 +126,7 @@ class App extends Component {
           edit={Loaded_costEdit}
         />
         <Resource name="currency" icon={AttachMoneyIcon} list={ListGuesser} />
+        <Resource name="users" icon={UserIcon} list={UserList} edit={UserEdit} show={UserShow} create={UserCreate} />
       </Admin>
     );
   }
