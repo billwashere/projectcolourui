@@ -11,7 +11,8 @@ import {
   EditButton,
   SimpleForm,
   TextInput,
-  Filter
+  Filter,
+  ReferenceManyField
 } from "react-admin";
 //fix me
 const Entity_typeFilter = props => (
@@ -59,6 +60,18 @@ export const Entity_typeShow = props => (
     <SimpleShowLayout>
       <TextField source="id" />
       <TextField source="name" />
+      <ReferenceManyField
+        label="History"
+        reference="entity_type"
+        target="object_id"
+      >
+        <Datagrid>
+          <TextField source="diff" />
+          <TextField source="action_tstamp_clk" />
+          <TextField source="action" />
+        </Datagrid>
+      </ReferenceManyField>
+      
     </SimpleShowLayout>
   </Show>
 );

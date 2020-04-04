@@ -14,7 +14,8 @@ import {
   EditButton,
   SimpleForm,
   TextInput,
-  Filter
+  Filter,
+  ReferenceManyField
 } from "react-admin";
 
 const Assoication_typeFilter = props => (
@@ -86,6 +87,17 @@ export const Assoication_typeShow = props => (
       <ReferenceField source="entityb_type_id" reference="entity_type">
         <TextField source="name" />
       </ReferenceField>
+      <ReferenceManyField
+        label="History"
+        reference="assoication_type_log"
+        target="object_id"
+      >
+        <Datagrid>
+          <TextField source="diff" />
+          <TextField source="action_tstamp_clk" />
+          <TextField source="action" />
+        </Datagrid>
+      </ReferenceManyField>
     </SimpleShowLayout>
   </Show>
 );

@@ -40,6 +40,7 @@ import {
 } from "./components/allocation";
 
 import {ExceptionList} from './components/exception'
+import {ProjectExceptionList} from './components/projectalloc'
 import {UserList,UserEdit, UserCreate, UserShow} from './components/users'
 import authProvider from "./authProvider";
 import dashboard from "./components/dashboard";
@@ -48,6 +49,7 @@ import AttachMoneyIcon from "@material-ui/icons/AttachMoney";
 import MonetizationOnRoundedIcon from "@material-ui/icons/MonetizationOnRounded";
 import UserIcon from '@material-ui/icons/People';
 import { createMuiTheme } from "@material-ui/core/styles";
+import ApolloClient from 'apollo-boost'
 
 const theme = createMuiTheme({
   palette: {
@@ -56,6 +58,19 @@ const theme = createMuiTheme({
 });
 
 const hasuraUrl = "https://colour.heisamachine.com/v1/graphql";
+
+
+const client = new ApolloClient({
+  uri: hasuraUrl,
+  request: (operation) => {
+    const token = localStorage.getItem('username')
+    operation.setContext({
+      headers: {
+        authorization: token ? `Bearer ${token}` : ''
+      }
+    })
+  }
+})
 class App extends Component {
   constructor() {
     super();
@@ -63,7 +78,7 @@ class App extends Component {
   }
   componentDidMount() {
     buildHasuraProvider({
-      clientOptions: { uri: hasuraUrl }
+      client: client
     }).then(dataProvider => this.setState({ dataProvider }));
   }
   render() {
@@ -81,6 +96,7 @@ class App extends Component {
         dashboard={dashboard}
       >
         <Resource label="Exceptions" name="vs_allocation_exception" list={ExceptionList} />
+        <Resource label="Exceptions" name="vs_project_allocation" list={ExceptionList} />
 
         <Resource
           name="entity"
@@ -88,6 +104,30 @@ class App extends Component {
           create={EntityCreate}
           edit={EntityEdit}
           show={EntityShow}
+        />
+         <Resource
+          name="entity_log"
+        />
+         <Resource
+          name="loaded_cost_log"
+        />   
+         <Resource
+          name="assoication_log"
+        />  
+         <Resource
+          name="allocation_log"
+        />
+        <Resource
+          name="entity_type_log"
+        />
+        <Resource
+          name="assoication_type_log"
+        />
+        <Resource
+          name="user_log"
+        />
+        <Resource
+          name="currency_log"
         />
         <Resource
           name="assoication"

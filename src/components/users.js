@@ -16,10 +16,8 @@ import {
   PasswordInput,
   SimpleForm,
   TextInput,
-  Filter,
-  DateInput,
   AutocompleteInput,
-  FormDataConsumer
+  ReferenceManyField
 } from "react-admin";
 export const UserList = props => (
   <List {...props}>
@@ -77,6 +75,17 @@ const UserTitle = ({ record }) => {
       <ReferenceField source="entity_id" reference="entity">
         <TextField source="name" />
       </ReferenceField>
+      <ReferenceManyField
+        label="History"
+        reference="users_log"
+        target="object_id"
+      >
+        <Datagrid>
+          <TextField source="diff" />
+          <TextField source="action_tstamp_clk" />
+          <TextField source="action" />
+        </Datagrid>
+      </ReferenceManyField>
       </SimpleShowLayout>
     </Show>
   );

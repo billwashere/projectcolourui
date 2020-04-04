@@ -15,7 +15,8 @@ import {
   SelectInput,
   SimpleForm,
   TextInput,
-  Filter
+  Filter,
+  ReferenceManyField
 } from "react-admin";
 //fix me
 const LoadedCostFilter = props => (
@@ -44,12 +45,12 @@ export const LoadedCostList = props => (
   </List>
 );
 
-const Loaded_costTitle = ({ record }) => {
+const LoadedCostTitle = ({ record }) => {
   return <span>Loaded Cost {record ? `"${record.id}"` : ""}</span>;
 };
 
 export const Loaded_costEdit = props => (
-  <Edit title={<Loaded_costTitle />} {...props}>
+  <Edit title={<LoadedCostTitle />} {...props}>
     <SimpleForm>
       <TextInput source="id" />
       <TextInput source="cost" />
@@ -93,5 +94,16 @@ export const Loaded_costShow = props => (
       <TextField label="Start Date" source="start_date" />
       <TextField label="End Date" source="end_date" />
     </SimpleShowLayout>
+    <ReferenceManyField
+        label="History"
+        reference="loaded_cost_log"
+        target="object_id"
+      >
+        <Datagrid>
+          <TextField source="diff" />
+          <TextField source="action_tstamp_clk" />
+          <TextField source="action" />
+        </Datagrid>
+      </ReferenceManyField>
   </Show>
 );

@@ -24,8 +24,8 @@ export default (type, params) => {
               if(response.status < 200 || response.status >= 300) {
                   throw new Error(response.statusText);
               }
-              return document.cookie
-          }).then(token => {localStorage.setItem('username',token)});
+              return response.json();
+          }).then(token => {localStorage.setItem('username',token.token)});
     }
     // called when the user clicks on the logout button
     if (type === AUTH_LOGOUT) {

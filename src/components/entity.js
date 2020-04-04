@@ -18,8 +18,12 @@ import {
   SelectInput,
   SimpleForm,
   TextInput,
-  Filter
+  Filter,
+  Pagination
 } from "react-admin";
+
+const PostPagination = props => <Pagination rowsPerPageOptions={[10, 25, 50, 100]} {...props} />;
+
 //fix me
 const EntityFilter = props => (
   <Filter {...props}>
@@ -40,7 +44,7 @@ const EntityFilter = props => (
 
 export const EntityList = props => (
   <List {...props} filters={<EntityFilter />}>
-    <Datagrid>
+    <Datagrid rowClick={(id,basepath,record) => `${basepath}/${id}/show`}>
       <TextField source="id" />
       <ReferenceField
         label="Entity Type"
@@ -49,25 +53,9 @@ export const EntityList = props => (
       >
         <TextField source="name" />
       </ReferenceField>
-
-      {/*<ReferenceManyField
-                label="Asspicated To"
-                reference="assoication"
-                target="entitya_id"
-            >
-                <Datagrid>
-                <TextField source="assoication_type_id" />
-                    <ReferenceField label="Name" source="entityb_id" reference="entity">
-                        <TextField source="name" />
-                    </ReferenceField>
-                    <EditButton />
-                </Datagrid>
-           </ReferenceManyField>*/}
       <TextField source="name" />
       <TextField label="Start Date" source="start_date" />
       <TextField label="End Date" source="end_date" />
-      <EditButton />
-      <ShowButton />
     </Datagrid>
   </List>
 );
@@ -115,13 +103,20 @@ export const EntityShow = props => (
   <Show title={<EntityTitle />} {...props}>
     <SimpleShowLayout>
       <TextField source="name" />
-      <TextField source="entity_type_id" />
+      <ReferenceField
+        label="Entity Type"
+        source="entity_type_id"
+        reference="entity_type"
+      >
+        <TextField source="name" />
+      </ReferenceField>
       <TextField label="Start Date" source="start_date" />
       <TextField label="End Date" source="end_date" />
       <ReferenceManyField
         label="Assoication To"
         reference="assoication"
         target="entitya_id"
+        pagination={<PostPagination />}
       >
         <Datagrid>
           <TextField source="assoication_type_id" />
@@ -145,6 +140,7 @@ export const EntityShow = props => (
         label="Assoication from"
         reference="assoication"
         target="entityb_id"
+        pagination={<PostPagination />}
       >
         <Datagrid>
           <TextField source="assoication_type_id" />
@@ -167,6 +163,7 @@ export const EntityShow = props => (
         reference="allocation"
         target="entityb_id"
         label="Allocations (Resource to Project)"
+        pagination={<PostPagination />}
       >
         <Datagrid>
           <TextField source="allocation" />
@@ -183,6 +180,7 @@ export const EntityShow = props => (
         label="Allocations (Project to Resource)"
         reference="allocation"
         target="entity_id"
+        pagination={<PostPagination />}
       >
         <Datagrid>
           <TextField source="allocation" />
@@ -211,6 +209,19 @@ export const EntityShow = props => (
           <CloneButton />
         </Datagrid>
       </ReferenceManyField>
+      
+      <ReferenceManyField
+        label="History"
+        reference="entity_log"
+        target="object_id"
+      >
+        <Datagrid>
+          <TextField source="diff" />
+          <TextField source="action_tstamp_clk" />
+          <TextField source="action" />
+        </Datagrid>
+      </ReferenceManyField>
+      
     </SimpleShowLayout>
   </Show>
 );
