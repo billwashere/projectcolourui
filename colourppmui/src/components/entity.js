@@ -48,7 +48,8 @@ const CostRateButton = ({ record }) => (
       
       to={{
           pathname: `/loaded_cost/create`,
-         // state:  { entity_id: record.id }
+          search: `?source={"entity_id":${record.id}}`,
+          state:  { entity_id: record.id }
       }}
   >
       New Create Loaded Cost
