@@ -36,39 +36,47 @@ export const UserList = props => (
 );
 
 const UserTitle = ({ record }) => {
-    return <span>User {record ? `"${record.name}"` : ""}</span>;
-  };
-  
-  export const UserEdit = props => (
-    <Edit title={<UserTitle />} {...props}>
-      <SimpleForm>
-        <TextInput source="id" disabled />
-        <TextInput source="name" />
-        <TextInput source="email" />
-        <PasswordInput source="password" />
-        <ReferenceInput source="entity_id" reference="entity"  filter={{ entity_type_id: [3] }} >
-        <AutocompleteInput optionText="name" />
-      </ReferenceInput>
-      </SimpleForm>
-    </Edit>
-  );
+  return <span>User {record ? `"${record.name}"` : ""}</span>;
+};
 
-  export const UserCreate = props => (
-    <Create {...props}>
-      <SimpleForm>
-        <TextInput source="name" />
-        <TextInput source="email" />
-        <PasswordInput source="password" />
-        <ReferenceInput source="entity_id" reference="entity"  filter={{ entity_type_id: [3] }} >
+export const UserEdit = props => (
+  <Edit title={<UserTitle />} {...props}>
+    <SimpleForm>
+      <TextInput source="id" disabled />
+      <TextInput source="name" />
+      <TextInput source="email" />
+      <PasswordInput source="password" />
+      <ReferenceInput
+        source="entity_id"
+        reference="entity"
+        filter={{ entity_type_id: [3] }}
+      >
         <AutocompleteInput optionText="name" />
       </ReferenceInput>
-      </SimpleForm>
-    </Create>
-  );
-  
-  export const UserShow = props => (
-    <Show {...props}>
-      <SimpleShowLayout>
+    </SimpleForm>
+  </Edit>
+);
+
+export const UserCreate = props => (
+  <Create {...props}>
+    <SimpleForm>
+      <TextInput source="name" />
+      <TextInput source="email" />
+      <PasswordInput source="password" />
+      <ReferenceInput
+        source="entity_id"
+        reference="entity"
+        filter={{ entity_type_id: [3] }}
+      >
+        <AutocompleteInput optionText="name" />
+      </ReferenceInput>
+    </SimpleForm>
+  </Create>
+);
+
+export const UserShow = props => (
+  <Show {...props}>
+    <SimpleShowLayout>
       <TextField source="id" />
       <TextField source="name" />
       <EmailField source="email" />
@@ -86,6 +94,6 @@ const UserTitle = ({ record }) => {
           <TextField source="action" />
         </Datagrid>
       </ReferenceManyField>
-      </SimpleShowLayout>
-    </Show>
-  );
+    </SimpleShowLayout>
+  </Show>
+);

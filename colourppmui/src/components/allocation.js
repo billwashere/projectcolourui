@@ -19,7 +19,8 @@ import {
   minValue,
   maxValue,
   number,
-  AutocompleteInput
+  AutocompleteInput,
+  ReferenceManyField
 } from "react-admin";
 //fix me
 const AllocationFilter = props => (
@@ -137,8 +138,7 @@ export const AllocationShow = props => (
       <TextField source="commitment" />
       <TextField source="created" />
       <TextField source="updated" />
-    </SimpleShowLayout>
-   {/* <ReferenceManyField
+      <ReferenceManyField
         label="History"
         reference="allocation_log"
         target="object_id"
@@ -148,6 +148,7 @@ export const AllocationShow = props => (
           <TextField source="action_tstamp_clk" />
           <TextField source="action" />
         </Datagrid>
-   </ReferenceManyField> */}
+      </ReferenceManyField>
+    </SimpleShowLayout>
   </Show>
 );
