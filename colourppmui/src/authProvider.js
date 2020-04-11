@@ -1,4 +1,10 @@
-import { AUTH_LOGIN, AUTH_LOGOUT, AUTH_ERROR, AUTH_CHECK } from "react-admin";
+import {
+  AUTH_LOGIN,
+  AUTH_LOGOUT,
+  AUTH_ERROR,
+  AUTH_CHECK,
+  AUTH_GET_PERMISSIONS
+} from "react-admin";
 import { parseJwt } from "./utils/parsejwt";
 
 //TODO: check if expired. refresh tokens.
@@ -15,21 +21,28 @@ export default (type, params) => {
       //credentials: 'same-origin', // include, *same-origin, omit
       credentials: "include",
       headers: {
-        "Content-Type": "application/json",
+        "Content-Type": "application/json"
         // 'Content-Type': 'application/x-www-form-urlencoded',
       },
       //redirect: 'follow', // manual, *follow, error
       //referrerPolicy: 'no-referrer', // no-referrer, *client
-      body: JSON.stringify({ username, password }), // body data type must match "Content-Type" header
+      body: JSON.stringify({ username, password }) // body data type must match "Content-Type" header
     })
-      .then((response) => {
+      .then(response => {
         if (response.status < 200 || response.status >= 300) {
           throw new Error(response.statusText);
         }
         return response.json();
       })
-      .then((token) => {
+      .then(token => {
         localStorage.setItem("username", token.token);
+        const jwtDecoded = parseJwt(token.token);
+        if (jwtDecoded) {
+          localStorage.setItem(
+            "permissions",
+            jwtDecoded["https://hasura.io/jwt/claims"]["x-hasura-default-role"]
+          );
+        }
       });
   }
   // called when the user clicks on the logout button
@@ -60,22 +73,31 @@ export default (type, params) => {
           //credentials: 'same-origin', // include, *same-origin, omit
           //credentials: 'include',
           headers: {
-            "Content-Type": "application/json",
+            "Content-Type": "application/json"
             // 'Content-Type': 'application/x-www-form-urlencoded',
           },
           //redirect: 'follow', // manual, *follow, error
           //referrerPolicy: 'no-referrer', // no-referrer, *client
-          body: JSON.stringify({ token }), // body data type must match "Content-Type" header
+          body: JSON.stringify({ token }) // body data type must match "Content-Type" header
         })
-          .then((response) => {
+          .then(response => {
             if (response.status < 200 || response.status >= 300) {
               throw new Error(response.statusText);
             }
             console.log("refreshing");
             return response.json();
           })
-          .then((t) => {
+          .then(t => {
             localStorage.setItem("username", t.token);
+            const jwtDecoded = parseJwt(t.token);
+            if (jwtDecoded) {
+              localStorage.setItem(
+                "permissions",
+                jwtDecoded["https://hasura.io/jwt/claims"][
+                  "x-hasura-default-role"
+                ]
+              );
+            }
           });
       }
     }
@@ -99,21 +121,21 @@ export default (type, params) => {
           //credentials: 'same-origin', // include, *same-origin, omit
           //credentials: 'include',
           headers: {
-            "Content-Type": "application/json",
+            "Content-Type": "application/json"
             // 'Content-Type': 'application/x-www-form-urlencoded',
           },
           //redirect: 'follow', // manual, *follow, error
           //referrerPolicy: 'no-referrer', // no-referrer, *client
-          body: JSON.stringify({ token }), // body data type must match "Content-Type" header
+          body: JSON.stringify({ token }) // body data type must match "Content-Type" header
         })
-          .then((response) => {
+          .then(response => {
             if (response.status < 200 || response.status >= 300) {
               throw new Error(response.statusText);
             }
             console.log("refreshing");
             return response.json();
           })
-          .then((t) => {
+          .then(t => {
             localStorage.setItem("username", t.token);
           });
       }
@@ -121,6 +143,11 @@ export default (type, params) => {
       return Promise.reject();
     }
   }
+  if (type === AUTH_GET_PERMISSIONS) {
+    const role = localStorage.getItem("permissions");
+    return role ? Promise.resolve(role) : Promise.reject();
+  }
 
-  return Promise.reject("Unknown method");
+  console.log(type);
+  return Promise.reject("Unknown method: " + type);
 };
