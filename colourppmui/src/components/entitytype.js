@@ -12,7 +12,9 @@ import {
   SimpleForm,
   TextInput,
   Filter,
-  ReferenceManyField
+  ReferenceManyField,
+  BooleanField,
+  BooleanInput
 } from "react-admin";
 //fix me
 const Entity_typeFilter = props => (
@@ -26,6 +28,9 @@ export const Entity_typeList = props => (
     <Datagrid>
       <TextField source="id" />
       <TextField source="name" />
+      <BooleanField source="allow_allocation" />
+      <BooleanField source="allow_loaded_cost" />     
+      <BooleanField source="is_resource" />
       <TextField source="created" />
       <TextField source="updated" />
       <EditButton />
@@ -43,6 +48,9 @@ export const Entity_typeEdit = props => (
     <SimpleForm>
       <TextInput source="id" disabled />
       <TextInput source="name" />
+      <BooleanInput source="allow_allocation" />
+      <BooleanInput source="allow_loaded_cost" />     
+      <BooleanInput source="is_resource" />
     </SimpleForm>
   </Edit>
 );
@@ -51,6 +59,9 @@ export const Entity_typeCreate = props => (
   <Create {...props}>
     <SimpleForm>
       <TextInput source="name" />
+      <BooleanInput source="allow_allocation" />
+      <BooleanInput source="allow_loaded_cost" />     
+      <BooleanInput source="is_resource" />
     </SimpleForm>
   </Create>
 );
@@ -60,9 +71,12 @@ export const Entity_typeShow = props => (
     <SimpleShowLayout>
       <TextField source="id" />
       <TextField source="name" />
+      <BooleanField source="allow_allocation" />
+      <BooleanField source="allow_loaded_cost" />     
+      <BooleanField source="is_resource" />
       <ReferenceManyField
         label="History"
-        reference="entity_type"
+        reference="entity_type_log"
         target="object_id"
       >
         <Datagrid>
