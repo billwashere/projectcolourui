@@ -40,7 +40,7 @@ import {
 } from "./components/allocation";
 
 import { ExceptionList } from "./components/exception";
-import { ProjectExceptionList } from "./components/projectalloc";
+//import { ProjectExceptionList } from "./components/projectalloc";
 import { UserList, UserEdit, UserCreate, UserShow } from "./components/users";
 import authProvider from "./authProvider";
 import dashboard from "./components/dashboard";
@@ -50,8 +50,9 @@ import MonetizationOnRoundedIcon from "@material-ui/icons/MonetizationOnRounded"
 import UserIcon from "@material-ui/icons/People";
 import { createMuiTheme } from "@material-ui/core/styles";
 import ApolloClient from "apollo-boost";
-import MyLoginPage from "./components/MyLoginPage";
+//import MyLoginPage from "./components/MyLoginPage";
 import { parseJwt } from "./utils/parsejwt";
+import { __schema as schema } from './schema3.json';
 
 const theme = createMuiTheme({
   palette: {
@@ -75,15 +76,164 @@ const client = new ApolloClient({
           authorization: token ? `Bearer ${token}` : ""
         }
       });
-    } else {
+    } /*else {
       operation.setContext({
         headers: {
           "x-hasura-admin-secret": "davina93!"
         }
       });
-    }
+    }*/
   }
 });
+ 
+
+function perm_map(perm)  {
+  if(perm==="su") {return [<Resource
+  options={{ label: "Resource Exceptions" }}
+  name="vs_allocation_exception"
+  list={ExceptionList}
+/>,
+<Resource
+  options={{ label: "Project Exceptions" }}
+  name="vs_project_allocation"
+  list={ExceptionList}
+/>,
+
+<Resource
+  name="entity"
+  list={EntityList}
+  create={EntityCreate}
+  edit={EntityEdit}
+  show={EntityShow}
+/>,
+<Resource name="entity_log" />,
+<Resource name="loaded_cost_log" />,
+<Resource name="assoication_log" />,
+<Resource name="allocation_log" />,
+<Resource name="entity_type_log" />,
+<Resource name="assoication_type_log" />,
+<Resource name="user_log" />,
+<Resource name="currency_log" />,
+<Resource
+  name="assoication"
+  list={AssoicationList}
+  create={AssoicationCreate}
+  edit={AssoicationEdit}
+  show={AssoicationShow}
+/>,
+<Resource
+  name="allocation"
+  list={AllocationList}
+  create={AllocationCreate}
+  edit={AllocationEdit}
+  show={AllocationShow}
+/>,
+<Resource
+  name="entity_type"
+  list={Entity_typeList}
+  create={Entity_typeCreate}
+  edit={Entity_typeEdit}
+  show={Entity_typeShow}
+/>,
+ <Resource
+  name="assoication_type"
+  list={Assoication_typeList}
+  create={Assoication_typeCreate}
+  edit={Assoication_typeEdit}
+  show={Assoication_typeShow}
+/> ,
+<Resource
+  name="loaded_cost"
+  icon={MonetizationOnRoundedIcon}
+  create={Loaded_costCreate}
+  list={LoadedCostList}
+  show={Loaded_costShow}
+  edit={Loaded_costEdit}
+/>,
+<Resource
+  name="currency"
+  icon={AttachMoneyIcon}
+  list={ListGuesser}
+/> ,
+ <Resource
+  name="users"
+  icon={UserIcon}
+  list={UserList}
+  edit={UserEdit}
+  show={UserShow}
+  create={UserCreate}
+/> 
+] } else {return [
+    <Resource
+      options={{ label: "Resource Exceptions" }}
+      name="vs_allocation_exception"
+      list={ExceptionList}
+    />,
+    <Resource
+      options={{ label: "Project Exceptions" }}
+      name="vs_project_allocation"
+      list={ExceptionList}
+    />,
+
+    <Resource
+      name="entity"
+      list={EntityList}
+      create={EntityCreate}
+      edit={EntityEdit}
+      show={EntityShow}
+    />,
+    <Resource name="entity_log" />,
+    <Resource name="loaded_cost_log" />,
+    <Resource name="assoication_log" />,
+    <Resource name="allocation_log" />,
+    <Resource name="entity_type_log" />,
+    <Resource name="assoication_type_log" />,
+    <Resource name="user_log" />,
+    <Resource name="currency_log" />,
+    <Resource
+      name="assoication"
+      list={AssoicationList}
+      create={AssoicationCreate}
+      edit={AssoicationEdit}
+      show={AssoicationShow}
+    />,
+    <Resource
+      name="allocation"
+      list={AllocationList}
+      create={AllocationCreate}
+      edit={AllocationEdit}
+      show={AllocationShow}
+    />,
+    <Resource
+      name="entity_type"
+      list={Entity_typeList}
+      show={Entity_typeShow}
+    />,
+    <Resource
+      name="assoication_type"
+      list={Assoication_typeList}
+      show={Assoication_typeShow}
+    />,
+    <Resource
+      name="loaded_cost"
+      show={Loaded_costShow}
+      create={Loaded_costCreate}
+      show={Loaded_costShow}
+      edit={Loaded_costEdit}
+    />,
+    <Resource
+      name="currency"
+      icon={AttachMoneyIcon}
+      />,
+      ,
+      <Resource
+       name="users"
+       icon={UserIcon}
+       list={UserList}
+     /> 
+  ]
+}}
+
 class App extends Component {
   constructor() {
     super();
@@ -94,11 +244,11 @@ class App extends Component {
 
     const jwtDecoded = parseJwt(token) || { exp: 0 };
     const nowUnixSeconds = Math.round(Number(new Date()) / 1000);
-    if (jwtDecoded.exp - nowUnixSeconds <= 30) {
+    if (jwtDecoded.exp - nowUnixSeconds <= 120) {
       localStorage.removeItem("username");
     }
     buildHasuraProvider({
-      client: client
+      client: client ,  introspection: { schema }
     }).then(dataProvider => this.setState({ dataProvider }));
   }
   render() {
@@ -121,83 +271,7 @@ class App extends Component {
         authProvider={authProvider}
         dashboard={dashboard}
       >
-        {permissions => [
-          <Resource
-            options={{ label: "Resource Exceptions" }}
-            name="vs_allocation_exception"
-            list={ExceptionList}
-          />,
-          <Resource
-            options={{ label: "Project Exceptions" }}
-            name="vs_project_allocation"
-            list={ExceptionList}
-          />,
-
-          <Resource
-            name="entity"
-            list={EntityList}
-            create={EntityCreate}
-            edit={EntityEdit}
-            show={EntityShow}
-          />,
-          <Resource name="entity_log" />,
-          <Resource name="loaded_cost_log" />,
-          <Resource name="assoication_log" />,
-          <Resource name="allocation_log" />,
-          <Resource name="entity_type_log" />,
-          <Resource name="assoication_type_log" />,
-          <Resource name="user_log" />,
-          <Resource name="currency_log" />,
-          <Resource
-            name="assoication"
-            list={AssoicationList}
-            create={AssoicationCreate}
-            edit={AssoicationEdit}
-            show={AssoicationShow}
-          />,
-          <Resource
-            name="allocation"
-            list={AllocationList}
-            create={AllocationCreate}
-            edit={AllocationEdit}
-            show={AllocationShow}
-          />,
-          <Resource
-            name="entity_type"
-            list={Entity_typeList}
-            create={Entity_typeCreate}
-            edit={Entity_typeEdit}
-            show={Entity_typeShow}
-          />,
-          <Resource
-            name="assoication_type"
-            list={Assoication_typeList}
-            create={Assoication_typeCreate}
-            edit={Assoication_typeEdit}
-            show={Assoication_typeShow}
-          />,
-          <Resource
-            name="loaded_cost"
-            icon={MonetizationOnRoundedIcon}
-            create={Loaded_costCreate}
-            list={LoadedCostList}
-            show={Loaded_costShow}
-            edit={Loaded_costEdit}
-          />,
-          <Resource
-            name="currency"
-            icon={AttachMoneyIcon}
-            list={ListGuesser}
-          />,
-          <Resource
-            name="users"
-            icon={UserIcon}
-            list={UserList}
-            edit={UserEdit}
-            show={UserShow}
-            create={UserCreate}
-          />
-        ]}
+        {permissions => perm_map(permissions)}
       </Admin>
     );
   }

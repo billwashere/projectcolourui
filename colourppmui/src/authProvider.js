@@ -42,12 +42,14 @@ export default (type, params) => {
             "permissions",
             jwtDecoded["https://hasura.io/jwt/claims"]["x-hasura-default-role"]
           );
+          // localStorage.setItem("available_perms",JSON.stringify(jwtDecoded["https://hasura.io/jwt/claims"]["x-hasura-allowed-roles"]))
         }
       });
   }
   // called when the user clicks on the logout button
   if (type === AUTH_LOGOUT) {
     localStorage.removeItem("username");
+    localStorage.removeItem("available_perms");
     return Promise.resolve();
   }
   // called when the API returns an error
@@ -55,6 +57,7 @@ export default (type, params) => {
     const { status } = params;
     if (status === 401 || status === 403) {
       localStorage.removeItem("username");
+      localStorage.removeItem("available_perms");
       return Promise.reject();
     }
     const token = localStorage.getItem("username");
@@ -63,7 +66,7 @@ export default (type, params) => {
     const jwtDecoded = parseJwt(token);
     if (jwtDecoded) {
       const nowUnixSeconds = Math.round(Number(new Date()) / 1000);
-      if (jwtDecoded.exp - nowUnixSeconds > 30) {
+      if (jwtDecoded.exp - nowUnixSeconds > 120) {
         return Promise.resolve();
       } else {
         return fetch("/refresh", {
@@ -91,12 +94,14 @@ export default (type, params) => {
             localStorage.setItem("username", t.token);
             const jwtDecoded = parseJwt(t.token);
             if (jwtDecoded) {
+              if(!localStorage.getItem("permissions")) {
               localStorage.setItem(
                 "permissions",
                 jwtDecoded["https://hasura.io/jwt/claims"][
                   "x-hasura-default-role"
                 ]
-              );
+              )};
+             // localStorage.setItem("available_perms",JSON.stringify(jwtDecoded["https://hasura.io/jwt/claims"]["x-hasura-allowed-roles"]))
             }
           });
       }
@@ -148,6 +153,5 @@ export default (type, params) => {
     return role ? Promise.resolve(role) : Promise.reject();
   }
 
-  console.log(type);
   return Promise.reject("Unknown method: " + type);
 };

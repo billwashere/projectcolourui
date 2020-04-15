@@ -128,13 +128,17 @@ const refresh = (req, res) => {
     return res.status(400).end();
   }
   // (END) The code uptil this point is the same as the first part of the `welcome` route
-
+  console.log("payload");
+  console.log(payload);
   // We ensure that a new token is not issued until enough time has elapsed
   // In this case, a new token will only be issued if the old token is within
   // 30 seconds of expiry. Otherwise, return a bad request status
   const nowUnixSeconds = Math.round(Number(new Date()) / 1000);
+  console.log(nowUnixSeconds);
   if (payload.exp - nowUnixSeconds > 30) {
-    return res.status(400).end();
+    res.json({ token: token });
+  res.end();
+    //return res.status(400).end();
   }
 
   //todo:check if user still valid
