@@ -21,7 +21,7 @@ import {
   FormDataConsumer,
   ReferenceManyField
 } from "react-admin";
-
+import { useQueryWithStore, Loading, Error } from "react-admin";
 //fix me
 const AssoicationFilter = props => (
   <Filter {...props}>
@@ -52,14 +52,14 @@ const AssoicationFilter = props => (
       <AutocompleteInput optionText="name" />
     </ReferenceInput>
     <ReferenceInput
-   label="Entity to"
-   source="entityb_id"
-   reference="entity"
-   filterToQuery={searchText => ({ name: searchText })}
-   allowEmpty
- >
-   <AutocompleteInput optionText="name" />
- </ReferenceInput>
+      label="Entity to"
+      source="entityb_id"
+      reference="entity"
+      filterToQuery={searchText => ({ name: searchText })}
+      allowEmpty
+    >
+      <AutocompleteInput optionText="name" />
+    </ReferenceInput>
   </Filter>
 );
 
@@ -78,7 +78,6 @@ export const AssoicationList = props => (
         label="Entity From"
         source="entitya_id"
         reference="entity"
-        
       >
         <TextField source="name" />
       </ReferenceField>
@@ -95,94 +94,24 @@ export const AssoicationList = props => (
 );
 
 const AssoicationTitle = ({ record }) => {
-  return <span>Assoication {record ? `"${record.name}"` : ""}</span>;
+  return <span>Assoication {record ? `"${record.id}"` : ""}</span>;
 };
 
 export const AssoicationEdit = props => (
   <Edit title={<AssoicationTitle />} {...props}>
     <SimpleForm>
       <TextInput source="id" disabled />
+      <ReferenceField  label="Assoication Type"
+        source="assoication_type_id"
+        reference="assoication_type">
+        <TextField source="name" />
+      </ReferenceField>
       <DateInput label="Start Date" source="start_date" />
       <DateInput label="End Date" source="end_date" />
-      <FormDataConsumer>
-        {({ formData, ...rest }) => (
-          <ReferenceInput
-            label="From Entity"
-            source="entitya_id"
-            reference="entity"
-            filterToQuery={searchText => ({ name: searchText })}
-            filter={valid_from_wrapper(formData)}
-          >
-            <AutocompleteInput optionText="name" />
-          </ReferenceInput>
-        )}
-      </FormDataConsumer>
-      <FormDataConsumer>
-        {({ formData, ...rest }) => (
-          <ReferenceInput
-            label="To Entity"
-            source="entityb_id"
-            reference="entity"
-            filterToQuery={searchText => ({ name: searchText })}
-            filter={valid_to_wrapper(formData)}
-          >
-            <AutocompleteInput optionText="name" />
-          </ReferenceInput>
-        )}
-      </FormDataConsumer>
+      <EntityFields />
     </SimpleForm>
   </Edit>
 );
-
-function valid_from(formData) {
-  if (!("assoication_type_id" in formData)) return [];
-  let project_ids = [1, 2, 4, 5, 6, 7, 8];
-  let client_ids = [3];
-  let team_ids = [9];
-  if (project_ids.includes(formData["assoication_type_id"])) {
-    return [2];
-  }
-  if (client_ids.includes(formData["assoication_type_id"])) {
-    return [1];
-  }
-  if (team_ids.includes(formData["assoication_type_id"])) {
-    return [7];
-  }
-  return [];
-}
-
-function valid_from_wrapper(formData) {
-  let res = valid_from(formData);
-  if (res.length === 0) return {};
-  return { entity_type_id: res };
-}
-
-function valid_to(formData) {
-  if (!("assoication_type_id" in formData)) return [];
-  let legal_ids = [1, 2];
-  let project_ids = [3];
-  let resource_ids = [4, 5, 6, 9];
-  let rep_ids = [7, 8];
-  if (legal_ids.includes(formData["assoication_type_id"])) {
-    return [4];
-  }
-  if (project_ids.includes(formData["assoication_type_id"])) {
-    return [2];
-  }
-  if (resource_ids.includes(formData["assoication_type_id"])) {
-    return [3];
-  }
-  if (rep_ids.includes(formData["assoication_type_id"])) {
-    return [5];
-  }
-  return [];
-}
-
-function valid_to_wrapper(formData) {
-  let res = valid_to(formData);
-  if (res.length === 0) return {};
-  return { entity_type_id: res };
-}
 
 export const AssoicationCreate = props => (
   <Create {...props}>
@@ -196,32 +125,7 @@ export const AssoicationCreate = props => (
       </ReferenceInput>
       <DateInput label="Start Date" source="start_date" />
       <DateInput label="End Date" source="end_date" />
-      <FormDataConsumer>
-        {({ formData, ...rest }) => (
-          <ReferenceInput
-            label="From Entity"
-            source="entitya_id"
-            reference="entity"
-            filterToQuery={searchText => ({ name: searchText })}
-            filter={valid_from_wrapper(formData)}
-          >
-            <AutocompleteInput optionText="name" />
-          </ReferenceInput>
-        )}
-      </FormDataConsumer>
-      <FormDataConsumer>
-        {({ formData, ...rest }) => (
-          <ReferenceInput
-            label="To Entity"
-            source="entityb_id"
-            reference="entity"
-            filterToQuery={searchText => ({ name: searchText })}
-            filter={valid_to_wrapper(formData)}
-          >
-            <AutocompleteInput optionText="name" />
-          </ReferenceInput>
-        )}
-      </FormDataConsumer>
+      <EntityFields />
     </SimpleForm>
   </Create>
 );
@@ -243,7 +147,72 @@ export const AssoicationShow = props => (
           <TextField source="action" />
         </Datagrid>
       </ReferenceManyField>
-      
     </SimpleShowLayout>
   </Show>
 );
+
+function createEntityFilter(formData, data, field) {
+  if (!("assoication_type_id" in formData)) return {};
+  try {
+    const res = data.filter(
+      result => result.id == formData["assoication_type_id"]
+    );
+    if (res.length === 0) {
+      return {};
+    }
+    console.log({ entity_type_id: res[0][field] });
+    return { entity_type_id: res[0][field] };
+  } catch (e) {
+    console.log("e");
+    console.log(e);
+    return {};
+  }
+}
+
+const EntityFields = ({ record }) => {
+  const { loaded, error, data } = useQueryWithStore({
+    type: "getList",
+    resource: "assoication_type",
+    payload: { pagination: { page: 1, perPage: 1000 }, filter: {} }
+  });
+  if (!loaded) {
+    return <Loading />;
+  }
+  if (error) {
+    return <Error />;
+  }
+
+  return (
+    <FormDataConsumer>
+      {({ formData, ...rest }) => (
+        <>
+          {" "}
+          {"assoication_type_id" in formData ? (
+            <>
+              <ReferenceInput
+                label="From Entity"
+                source="entitya_id"
+                reference="entity"
+                filterToQuery={searchText => ({ name: searchText })}
+                filter={createEntityFilter(formData, data, "entitya_type_id")}
+              >
+                <AutocompleteInput optionText="name" />
+              </ReferenceInput>
+              <ReferenceInput
+                label="To Entity"
+                source="entityb_id"
+                reference="entity"
+                filterToQuery={searchText => ({ name: searchText })}
+                filter={createEntityFilter(formData, data, "entityb_type_id")}
+              >
+                <AutocompleteInput optionText="name" />
+              </ReferenceInput>
+            </>
+          ) : (
+            <div>Select type first!</div>
+          )}
+        </>
+      )}
+    </FormDataConsumer>
+  );
+};
