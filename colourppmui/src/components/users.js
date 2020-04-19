@@ -17,9 +17,37 @@ import {
   SimpleForm,
   TextInput,
   AutocompleteInput,
-  ReferenceManyField
+  ReferenceManyField,
+  Toolbar,
+  SaveButton,
 } from "react-admin";
-export const UserList = props => (
+import DeleteWithUndoButton from "./DeleteWithUndoButton";
+import { makeStyles } from "@material-ui/core/styles";
+const useStyles = makeStyles({
+  toolbar: {
+    display: "flex",
+    justifyContent: "space-between",
+  },
+});
+
+const ToolbarCustomButton = ({
+  handleSubmit,
+  handleSubmitWithRedirect,
+  onSave,
+  invalid,
+  pristine,
+  saving,
+  submitOnEnter,
+  ...rest
+}) => <DeleteWithUndoButton {...rest} />;
+
+const CustomToolbar = ({ permissions, ...props }) => (
+  <Toolbar {...props} classes={useStyles()}>
+    <SaveButton />
+    {permissions === "su" && <ToolbarCustomButton {...props} />}
+  </Toolbar>
+);
+export const UserList = (props) => (
   <List {...props}>
     <Datagrid>
       <TextField source="id" />
@@ -39,9 +67,9 @@ const UserTitle = ({ record }) => {
   return <span>User {record ? `"${record.name}"` : ""}</span>;
 };
 
-export const UserEdit = props => (
+export const UserEdit = ({ permissions, ...props }) => (
   <Edit title={<UserTitle />} {...props}>
-    <SimpleForm>
+    <SimpleForm toolbar={<CustomToolbar permissions={permissions} />}>
       <TextInput source="id" disabled />
       <TextInput source="name" />
       <TextInput source="email" />
@@ -57,7 +85,7 @@ export const UserEdit = props => (
   </Edit>
 );
 
-export const UserCreate = props => (
+export const UserCreate = (props) => (
   <Create {...props}>
     <SimpleForm>
       <TextInput source="name" />
@@ -74,7 +102,7 @@ export const UserCreate = props => (
   </Create>
 );
 
-export const UserShow = props => (
+export const UserShow = (props) => (
   <Show {...props}>
     <SimpleShowLayout>
       <TextField source="id" />

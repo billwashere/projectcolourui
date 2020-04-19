@@ -15,16 +15,43 @@ import {
   SimpleForm,
   TextInput,
   Filter,
-  ReferenceManyField
+  ReferenceManyField,
+  Toolbar,
+  SaveButton,
 } from "react-admin";
+import DeleteWithUndoButton from "./DeleteWithUndoButton";
+import { makeStyles } from "@material-ui/core/styles";
+const useStyles = makeStyles({
+  toolbar: {
+    display: "flex",
+    justifyContent: "space-between",
+  },
+});
 
-const Assoication_typeFilter = props => (
+const ToolbarCustomButton = ({
+  handleSubmit,
+  handleSubmitWithRedirect,
+  onSave,
+  invalid,
+  pristine,
+  saving,
+  submitOnEnter,
+  ...rest
+}) => <DeleteWithUndoButton {...rest} />;
+
+const CustomToolbar = ({ permissions, ...props }) => (
+  <Toolbar {...props} classes={useStyles()}>
+    <SaveButton />
+    {permissions === "su" && <ToolbarCustomButton {...props} />}
+  </Toolbar>
+);
+const Assoication_typeFilter = (props) => (
   <Filter {...props}>
     <TextInput label="Search" source="id" alwaysOn />
   </Filter>
 );
 
-export const Assoication_typeList = props => (
+export const Assoication_typeList = (props) => (
   <List {...props} filters={<Assoication_typeFilter />}>
     <Datagrid>
       <TextField source="id" />
@@ -47,9 +74,9 @@ const Assoication_typeTitle = ({ record }) => {
   return <span>Assoication Type {record ? `"${record.name}"` : ""}</span>;
 };
 
-export const Assoication_typeEdit = props => (
+export const Assoication_typeEdit = ({ permissions, ...props }) => (
   <Edit title={<Assoication_typeTitle />} {...props}>
-    <SimpleForm>
+    <SimpleForm toolbar={<CustomToolbar permissions={permissions} />}>
       <TextInput source="id" disabled />
       <TextInput source="name" />
       <ReferenceField source="entitya_type_id" reference="entity_type">
@@ -62,7 +89,7 @@ export const Assoication_typeEdit = props => (
   </Edit>
 );
 
-export const Assoication_typeCreate = props => (
+export const Assoication_typeCreate = (props) => (
   <Create {...props}>
     <SimpleForm>
       <TextInput source="name" />
@@ -76,7 +103,7 @@ export const Assoication_typeCreate = props => (
   </Create>
 );
 
-export const Assoication_typeShow = props => (
+export const Assoication_typeShow = (props) => (
   <Show {...props}>
     <SimpleShowLayout>
       <TextField source="id" />

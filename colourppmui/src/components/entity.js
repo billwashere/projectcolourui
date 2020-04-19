@@ -19,8 +19,9 @@ import {
   Filter,
   Pagination,
   Toolbar,
-  SaveButton
+  SaveButton, BooleanField, BooleanInput
 } from "react-admin";
+import { useQueryWithStore, Loading, Error } from "react-admin";
 import Button from '@material-ui/core/Button';
 import { makeStyles } from '@material-ui/core/styles';
 
@@ -121,6 +122,7 @@ export const EntityList = props => (
       <TextField source="name" />
       <TextField label="Start Date" source="start_date" />
       <TextField label="End Date" source="end_date" />
+      <BooleanField source="deleted" />
     </Datagrid>
   </List>
 );
@@ -143,6 +145,7 @@ export const EntityEdit = ({ permissions, ...props }) => (
       <TextInput source="name" />
       <DateInput label="Start Date" source="start_date" />
       <DateInput label="End Date" source="end_date" />
+      {permissions === 'su' ? <BooleanInput source="deleted" /> : <></>}
     </SimpleForm>
   </Edit>
 );
@@ -164,6 +167,25 @@ export const EntityCreate = props => (
   </Create>
 );
 
+const EntityFields = ({ record }) => {
+  const { loaded, error, data } = useQueryWithStore({
+    type: "getOne",
+    resource: "entity_type",
+    payload: { id: record.entity_type_id}
+  });
+  if (!loaded) {
+    return <Loading />;
+  }
+  if (error) {
+    return <Error />;
+  }
+
+      
+  return (<TextField source="name" />)
+
+
+}
+
 export const EntityShow = props => (
   <Show title={<EntityTitle />} {...props}>
     <SimpleShowLayout>
@@ -177,6 +199,7 @@ export const EntityShow = props => (
       </ReferenceField>
       <TextField label="Start Date" source="start_date" />
       <TextField label="End Date" source="end_date" />
+      <BooleanField source="deleted" />
       <AssoicationButton />
       <ReferenceManyField
         label="Assoication To"

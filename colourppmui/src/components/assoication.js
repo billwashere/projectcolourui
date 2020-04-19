@@ -19,9 +19,37 @@ import {
   DateInput,
   AutocompleteInput,
   FormDataConsumer,
-  ReferenceManyField
+  ReferenceManyField,
+  Toolbar,
+  SaveButton
 } from "react-admin";
 import { useQueryWithStore, Loading, Error } from "react-admin";
+import DeleteWithUndoButton from './DeleteWithUndoButton'
+import { makeStyles } from '@material-ui/core/styles';
+const useStyles = makeStyles({
+  toolbar: {
+      display: 'flex',
+      justifyContent: 'space-between',
+  },
+});
+
+const ToolbarCustomButton = ({
+  handleSubmit,
+  handleSubmitWithRedirect,
+  onSave,
+  invalid,
+  pristine,
+  saving,
+  submitOnEnter,
+  ...rest
+}) => <DeleteWithUndoButton {...rest} />;
+
+const CustomToolbar = ({ permissions, ...props }) => 
+  <Toolbar {...props} classes={useStyles()}>
+      <SaveButton />
+{permissions === 'su' && <ToolbarCustomButton  {...props}/> }
+  </Toolbar>
+  ;
 //fix me
 const AssoicationFilter = props => (
   <Filter {...props}>
@@ -97,9 +125,9 @@ const AssoicationTitle = ({ record }) => {
   return <span>Assoication {record ? `"${record.id}"` : ""}</span>;
 };
 
-export const AssoicationEdit = props => (
+export const AssoicationEdit = ({ permissions, ...props }) => (
   <Edit title={<AssoicationTitle />} {...props}>
-    <SimpleForm>
+    <SimpleForm toolbar={<CustomToolbar permissions={permissions}  />}>
       <TextInput source="id" disabled />
       <ReferenceField  label="Assoication Type"
         source="assoication_type_id"
@@ -155,7 +183,7 @@ function createEntityFilter(formData, data, field) {
   if (!("assoication_type_id" in formData)) return {};
   try {
     const res = data.filter(
-      result => result.id == formData["assoication_type_id"]
+      result => result.id === formData["assoication_type_id"]
     );
     if (res.length === 0) {
       return {};

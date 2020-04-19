@@ -17,8 +17,36 @@ import {
   TextInput,
   Filter,
   ReferenceManyField,
-  AutocompleteInput
+  AutocompleteInput,
+  Toolbar,
+  SaveButton,
 } from "react-admin";
+import DeleteWithUndoButton from './DeleteWithUndoButton'
+import { makeStyles } from '@material-ui/core/styles';
+const useStyles = makeStyles({
+  toolbar: {
+      display: 'flex',
+      justifyContent: 'space-between',
+  },
+});
+
+const ToolbarCustomButton = ({
+  handleSubmit,
+  handleSubmitWithRedirect,
+  onSave,
+  invalid,
+  pristine,
+  saving,
+  submitOnEnter,
+  ...rest
+}) => <DeleteWithUndoButton {...rest} />;
+
+const CustomToolbar = ({ permissions, ...props }) => 
+  <Toolbar {...props} classes={useStyles()}>
+      <SaveButton />
+{permissions === 'su' && <ToolbarCustomButton  {...props}/> }
+  </Toolbar>
+  ;
 //fix me
 const LoadedCostFilter = props => (
   <Filter {...props}>
@@ -50,9 +78,9 @@ const LoadedCostTitle = ({ record }) => {
   return <span>Loaded Cost {record ? `"${record.id}"` : ""}</span>;
 };
 
-export const Loaded_costEdit = props => (
+export const Loaded_costEdit = ({ permissions, ...props }) => (
   <Edit title={<LoadedCostTitle />} {...props}>
-    <SimpleForm>
+    <SimpleForm  toolbar={<CustomToolbar permissions={permissions}  />}>
       <TextInput source="id" disabled />
       <ReferenceField label="Entity" source="entity_id" reference="entity">
         <TextField source="name" />

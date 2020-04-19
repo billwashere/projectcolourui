@@ -4,18 +4,6 @@ import { List, Datagrid, ReferenceField, TextField } from "react-admin";
 import Button from "@material-ui/core/Button";
 import { Link } from "react-router-dom";
 
-const CreateRelatedCommentButton = ({ item }) => (
-  <Button
-    component={Link}
-    to={{
-      pathname: "/allocation",
-      state: item ? { filter: { id: item.id } } : {}
-    }}
-  >
-    {item ? item.allocation : 0}
-  </Button>
-);
-
 const TagsField = ({ record }) => (
   <div>
     {record.allocations ? (
