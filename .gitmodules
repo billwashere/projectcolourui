@@ -1,0 +1,3 @@
+[submodule "ra-data-hasura-graphql"]
+	path = ra-data-hasura-graphql
+	url = https://github.com/billwashere/ra-data-hasura-graphql.git
