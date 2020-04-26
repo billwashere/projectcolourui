@@ -70,19 +70,23 @@ const client = new ApolloClient({
   uri: hasuraUrl,
   request: operation => {
     const token = localStorage.getItem("username");
+    const perm = localStorage.getItem("permissions");
+    const id = localStorage.getItem("id");
     if (token) {
       operation.setContext({
         headers: {
-          authorization: token ? `Bearer ${token}` : ""
+          authorization: token ? `Bearer ${token}` : "",
+          "X-Hasura-Role": perm,
+          "X-Hasura-User-Id": id
         }
       });
-    } /*else {
+    } else {
       operation.setContext({
         headers: {
           "x-hasura-admin-secret": "davina93!"
         }
       });
-    }*/
+    }
   }
 });
  
@@ -106,6 +110,7 @@ function perm_map(perm)  {
   edit={EntityEdit}
   show={EntityShow}
 />,
+<Resource name="vw_entity_type" />,
 <Resource name="entity_log" />,
 <Resource name="loaded_cost_log" />,
 <Resource name="assoication_log" />,
@@ -164,6 +169,7 @@ function perm_map(perm)  {
   create={UserCreate}
 /> 
 ] } else {return [
+  <Resource name="vw_entity_type" />,
     <Resource
       options={{ label: "Resource Exceptions" }}
       name="vs_allocation_exception"
@@ -248,7 +254,7 @@ class App extends Component {
       localStorage.removeItem("username");
     }
     buildHasuraProvider({
-      client: client ,  introspection: { schema }
+      client: client //,  introspection: { schema }
     }).then(dataProvider => this.setState({ dataProvider }));
   }
   render() {

@@ -19,7 +19,7 @@ import {
   Filter,
   Pagination,
   Toolbar,
-  SaveButton, BooleanField, BooleanInput
+  SaveButton, BooleanField, BooleanInput, NullableBooleanInput 
 } from "react-admin";
 import { useQueryWithStore, Loading, Error } from "react-admin";
 import Button from '@material-ui/core/Button';
@@ -94,6 +94,7 @@ const PostPagination = props => <Pagination rowsPerPageOptions={[10, 25, 50, 100
 const EntityFilter = props => (
   <Filter {...props}>
     <TextInput label="Search" source="name" alwaysOn />
+    <NullableBooleanInput source="deleted" alwaysOn/>
     <ReferenceInput label="entity" source="id" reference="entity" allowEmpty>
       <SelectInput optionText="name" />
     </ReferenceInput>
@@ -109,7 +110,7 @@ const EntityFilter = props => (
 );
 
 export const EntityList = props => (
-  <List {...props} filters={<EntityFilter />}>
+  <List {...props} filters={<EntityFilter />} filterDefaultValues={{ deleted: false }}>
     <Datagrid rowClick={(id,basepath,record) => `${basepath}/${id}/show`}>
       <TextField source="id" />
       <ReferenceField
@@ -131,7 +132,21 @@ const EntityTitle = ({ record }) => {
   return <span>Entity {record ? `"${record.name}"` : ""}</span>;
 };
 
-export const EntityEdit = ({ permissions, ...props }) => (
+export const EntityEdit = ({ permissions, ...props }) => {
+  const { loaded, error, data } = useQueryWithStore({
+    type: 'getOne',
+    resource: "vw_entity_type",
+    payload: { id: props.id } 
+  });
+
+  if (!loaded) {
+    return <Loading />;
+  }   
+  if (error) {
+    return <Error />;
+  } 
+ 
+return (
   <Edit title={<EntityTitle />} {...props}>
     <SimpleForm toolbar={<CustomToolbar permissions={permissions}  />}>
       <TextInput source="id" disabled />
@@ -145,10 +160,11 @@ export const EntityEdit = ({ permissions, ...props }) => (
       <TextInput source="name" />
       <DateInput label="Start Date" source="start_date" />
       <DateInput label="End Date" source="end_date" />
+      {data.layout && data.layout.edit && data.layout.edit.components ? data.layout.edit.components.map( (arg,index) => React.createElement(ui_comp_map[arg.type],{key:arg.name+index,source:arg.name,...props})) : []  }
       {permissions === 'su' ? <BooleanInput source="deleted" /> : <></>}
     </SimpleForm>
   </Edit>
-);
+)};
 
 export const EntityCreate = props => (
   <Create {...props}>
@@ -167,28 +183,49 @@ export const EntityCreate = props => (
   </Create>
 );
 
-const EntityFields = ({ record }) => {
+const EntityFields = (props) => {
   const { loaded, error, data } = useQueryWithStore({
     type: "getOne",
     resource: "entity_type",
-    payload: { id: record.entity_type_id}
+    payload: { "entities.id": props.id}
   });
   if (!loaded) {
     return <Loading />;
   }
   if (error) {
     return <Error />;
-  }
-
-      
-  return (<TextField source="name" />)
+  } 
+  console.log(data)  
+  return <TextField source="name" props={{...props}} />
 
 
 }
 
-export const EntityShow = props => (
+const ui_comp_map = {
+  'TextField': TextField,
+  'TextInput': TextInput
+}
+
+
+export const EntityShow = props => {
+  const { loaded, error, data } = useQueryWithStore({
+    type: 'getOne',
+    resource: "vw_entity_type",
+    payload: { id: props.id } 
+  });
+
+  if (!loaded) {
+    return <Loading />;
+  }   
+  if (error) {
+    return <Error />;
+  } 
+  return (
   <Show title={<EntityTitle />} {...props}>
     <SimpleShowLayout>
+     {/*React.createElement('div',null,JSON.stringify({source:'fields',...props}))*/}
+     
+      <EntityFields props={{...props}} />
       <TextField source="name" />
       <ReferenceField
         label="Entity Type"
@@ -200,6 +237,7 @@ export const EntityShow = props => (
       <TextField label="Start Date" source="start_date" />
       <TextField label="End Date" source="end_date" />
       <BooleanField source="deleted" />
+      {data.layout && data.layout.show && data.layout.show.components ? data.layout.show.components.map( (arg,index) => React.createElement(ui_comp_map[arg.type],{key:arg.name+index,source:arg.name,...props})) : []  }
       <AssoicationButton />
       <ReferenceManyField
         label="Assoication To"
@@ -248,6 +286,7 @@ export const EntityShow = props => (
           <EditButton />
         </Datagrid>
       </ReferenceManyField>
+      
       <AllocationButton />
       <ReferenceManyField
         reference="allocation"
@@ -283,6 +322,7 @@ export const EntityShow = props => (
           <EditButton />
         </Datagrid>
       </ReferenceManyField>
+     
       <CostRateButton />
       <ReferenceManyField
         label="Cost Rates"
@@ -292,16 +332,14 @@ export const EntityShow = props => (
         <Datagrid>
           <TextField source="cost" />
           <TextField source="currency" />
-          {/*<ReferenceField source="currency" reference="currencies">
-                        <TextField source="Entity" />
-                    </ReferenceField> */}
+
           <TextField source="start_date" />
           <TextField source="end_date" />
           <EditButton />
           <CloneButton />
         </Datagrid>
       </ReferenceManyField>
-      
+    
       <ReferenceManyField
         label="History"
         reference="entity_log"
@@ -316,4 +354,4 @@ export const EntityShow = props => (
       
     </SimpleShowLayout>
   </Show>
-);
+)};

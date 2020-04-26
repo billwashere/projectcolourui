@@ -21,15 +21,17 @@ import {
   FormDataConsumer,
   ReferenceManyField,
   Toolbar,
-  SaveButton
+  SaveButton,
+  BooleanField,
+  BooleanInput,
 } from "react-admin";
 import { useQueryWithStore, Loading, Error } from "react-admin";
-import DeleteWithUndoButton from './DeleteWithUndoButton'
-import { makeStyles } from '@material-ui/core/styles';
+import DeleteWithUndoButton from "./DeleteWithUndoButton";
+import { makeStyles } from "@material-ui/core/styles";
 const useStyles = makeStyles({
   toolbar: {
-      display: 'flex',
-      justifyContent: 'space-between',
+    display: "flex",
+    justifyContent: "space-between",
   },
 });
 
@@ -44,14 +46,14 @@ const ToolbarCustomButton = ({
   ...rest
 }) => <DeleteWithUndoButton {...rest} />;
 
-const CustomToolbar = ({ permissions, ...props }) => 
+const CustomToolbar = ({ permissions, ...props }) => (
   <Toolbar {...props} classes={useStyles()}>
-      <SaveButton />
-{permissions === 'su' && <ToolbarCustomButton  {...props}/> }
+    <SaveButton />
+    <ToolbarCustomButton {...props} />
   </Toolbar>
-  ;
+);
 //fix me
-const AssoicationFilter = props => (
+const AssoicationFilter = (props) => (
   <Filter {...props}>
     <TextInput label="Search" source="id" alwaysOn />
     <ReferenceInput
@@ -75,7 +77,7 @@ const AssoicationFilter = props => (
       source="entitya_id"
       reference="entity"
       allowEmpty
-      filterToQuery={searchText => ({ name: searchText })}
+      filterToQuery={(searchText) => ({ name: searchText })}
     >
       <AutocompleteInput optionText="name" />
     </ReferenceInput>
@@ -83,7 +85,7 @@ const AssoicationFilter = props => (
       label="Entity to"
       source="entityb_id"
       reference="entity"
-      filterToQuery={searchText => ({ name: searchText })}
+      filterToQuery={(searchText) => ({ name: searchText })}
       allowEmpty
     >
       <AutocompleteInput optionText="name" />
@@ -91,7 +93,7 @@ const AssoicationFilter = props => (
   </Filter>
 );
 
-export const AssoicationList = props => (
+export const AssoicationList = (props) => (
   <List {...props} filters={<AssoicationFilter />}>
     <Datagrid>
       <TextField source="id" />
@@ -115,6 +117,7 @@ export const AssoicationList = props => (
 
       <DateField label="Start Date" source="start_date" />
       <DateField label="End Date" source="end_date" />
+      <BooleanField source="deleted" />
       <EditButton />
       <ShowButton />
     </Datagrid>
@@ -127,21 +130,24 @@ const AssoicationTitle = ({ record }) => {
 
 export const AssoicationEdit = ({ permissions, ...props }) => (
   <Edit title={<AssoicationTitle />} {...props}>
-    <SimpleForm toolbar={<CustomToolbar permissions={permissions}  />}>
+    <SimpleForm toolbar={<CustomToolbar permissions={permissions} />}>
       <TextInput source="id" disabled />
-      <ReferenceField  label="Assoication Type"
+      <ReferenceField
+        label="Assoication Type"
         source="assoication_type_id"
-        reference="assoication_type">
+        reference="assoication_type"
+      >
         <TextField source="name" />
       </ReferenceField>
       <DateInput label="Start Date" source="start_date" />
       <DateInput label="End Date" source="end_date" />
+      {permissions === "su" ? <BooleanInput source="deleted" /> : <></>}
       <EntityFields />
     </SimpleForm>
   </Edit>
 );
 
-export const AssoicationCreate = props => (
+export const AssoicationCreate = (props) => (
   <Create {...props}>
     <SimpleForm>
       <ReferenceInput
@@ -158,7 +164,7 @@ export const AssoicationCreate = props => (
   </Create>
 );
 
-export const AssoicationShow = props => (
+export const AssoicationShow = (props) => (
   <Show {...props}>
     <SimpleShowLayout>
       <TextField source="Assoication_type_id" />
@@ -183,7 +189,7 @@ function createEntityFilter(formData, data, field) {
   if (!("assoication_type_id" in formData)) return {};
   try {
     const res = data.filter(
-      result => result.id === formData["assoication_type_id"]
+      (result) => result.id === formData["assoication_type_id"]
     );
     if (res.length === 0) {
       return {};
@@ -201,7 +207,7 @@ const EntityFields = ({ record }) => {
   const { loaded, error, data } = useQueryWithStore({
     type: "getList",
     resource: "assoication_type",
-    payload: { pagination: { page: 1, perPage: 1000 }, filter: {} }
+    payload: { pagination: { page: 1, perPage: 1000 }, filter: {} },
   });
   if (!loaded) {
     return <Loading />;
@@ -221,7 +227,7 @@ const EntityFields = ({ record }) => {
                 label="From Entity"
                 source="entitya_id"
                 reference="entity"
-                filterToQuery={searchText => ({ name: searchText })}
+                filterToQuery={(searchText) => ({ name: searchText })}
                 filter={createEntityFilter(formData, data, "entitya_type_id")}
               >
                 <AutocompleteInput optionText="name" />
@@ -230,7 +236,7 @@ const EntityFields = ({ record }) => {
                 label="To Entity"
                 source="entityb_id"
                 reference="entity"
-                filterToQuery={searchText => ({ name: searchText })}
+                filterToQuery={(searchText) => ({ name: searchText })}
                 filter={createEntityFilter(formData, data, "entityb_type_id")}
               >
                 <AutocompleteInput optionText="name" />

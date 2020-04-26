@@ -62,7 +62,7 @@ export const Entity_typeList = (props) => (
       <BooleanField source="deleted" />
       <TextField source="created" />
       <TextField source="updated" />
-      
+      <TextField source="layout" />
       <EditButton />
       <ShowButton />
     </Datagrid>
@@ -81,7 +81,10 @@ export const Entity_typeEdit = ({ permissions, ...props }) => (
       <BooleanInput source="allow_allocation" />
       <BooleanInput source="allow_loaded_cost" />
       <BooleanInput source="is_resource" />
-      <BooleanInput source="deleted" />
+      <TextInput source="layout"  parse={v => JSON.parse(v)}
+    format={v => JSON.stringify(v)} fullWidth={true}
+    multiline={true} />
+      {permissions === 'su' ? <BooleanInput source="deleted" /> : <></>}
     </SimpleForm>
   </Edit>
 );
@@ -93,6 +96,9 @@ export const Entity_typeCreate = (props) => (
       <BooleanInput source="allow_allocation" />
       <BooleanInput source="allow_loaded_cost" />
       <BooleanInput source="is_resource" />
+      <TextInput source="layout"  parse={v => JSON.parse(v)}
+    format={v => JSON.stringify(v)} fullWidth={true}
+    multiline={true} />
     </SimpleForm>
   </Create>
 );
@@ -106,6 +112,9 @@ export const Entity_typeShow = (props) => (
       <BooleanField source="allow_loaded_cost" />
       <BooleanField source="is_resource" />
       <BooleanField source="deleted" />
+      <TextField source="layout"  parse={v => JSON.parse(v)}
+    format={v => JSON.stringify(v)} fullWidth={true}
+    multiline={true} />
       <ReferenceManyField
         label="History"
         reference="entity_type_log"

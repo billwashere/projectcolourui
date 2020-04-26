@@ -18,6 +18,8 @@ import {
   ReferenceManyField,
   Toolbar,
   SaveButton,
+  BooleanField,
+  BooleanInput
 } from "react-admin";
 import DeleteWithUndoButton from "./DeleteWithUndoButton";
 import { makeStyles } from "@material-ui/core/styles";
@@ -64,6 +66,7 @@ export const Assoication_typeList = (props) => (
       </ReferenceField>
       <TextField source="created" />
       <TextField source="updated" />
+      <BooleanField source="deleted" />
       <EditButton />
       <ShowButton />
     </Datagrid>
@@ -85,6 +88,7 @@ export const Assoication_typeEdit = ({ permissions, ...props }) => (
       <ReferenceField source="entityb_type_id" reference="entity_type">
         <TextField source="name" />
       </ReferenceField>
+      {permissions === 'su' ? <BooleanInput source="deleted" /> : <></>}
     </SimpleForm>
   </Edit>
 );

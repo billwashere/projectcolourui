@@ -42,6 +42,9 @@ export default (type, params) => {
             "permissions",
             jwtDecoded["https://hasura.io/jwt/claims"]["x-hasura-default-role"]
           );
+          
+          localStorage.setItem("id",jwtDecoded["https://hasura.io/jwt/claims"]["x-hasura-user-id"]);
+          
           // localStorage.setItem("available_perms",JSON.stringify(jwtDecoded["https://hasura.io/jwt/claims"]["x-hasura-allowed-roles"]))
         }
       });
@@ -94,6 +97,8 @@ export default (type, params) => {
             localStorage.setItem("username", t.token);
             const jwtDecoded = parseJwt(t.token);
             if (jwtDecoded) {
+              
+              localStorage.setItem("id",jwtDecoded["https://hasura.io/jwt/claims"]["x-hasura-user-id"]);
               if(!localStorage.getItem("permissions")) {
               localStorage.setItem(
                 "permissions",
@@ -142,6 +147,8 @@ export default (type, params) => {
           })
           .then(t => {
             localStorage.setItem("username", t.token);
+            localStorage.setItem("permissions",jwtDecoded["https://hasura.io/jwt/claims"]["x-hasura-default-role"]);
+            localStorage.setItem("id",jwtDecoded["https://hasura.io/jwt/claims"]["x-hasura-user-id"]);
           });
       }
     } else {

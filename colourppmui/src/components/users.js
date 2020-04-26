@@ -20,6 +20,8 @@ import {
   ReferenceManyField,
   Toolbar,
   SaveButton,
+  BooleanField,
+  BooleanInput
 } from "react-admin";
 import DeleteWithUndoButton from "./DeleteWithUndoButton";
 import { makeStyles } from "@material-ui/core/styles";
@@ -57,6 +59,7 @@ export const UserList = (props) => (
         <TextField source="name" />
       </ReferenceField>
       <DateField source="updated" />
+      <BooleanField source="deleted" />
       <EditButton />
       <ShowButton />
     </Datagrid>

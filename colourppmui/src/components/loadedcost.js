@@ -20,6 +20,8 @@ import {
   AutocompleteInput,
   Toolbar,
   SaveButton,
+  BooleanField,
+  BooleanInput
 } from "react-admin";
 import DeleteWithUndoButton from './DeleteWithUndoButton'
 import { makeStyles } from '@material-ui/core/styles';
@@ -68,6 +70,7 @@ export const LoadedCostList = props => (
       <TextField source="level" />
       <TextField label="Start Date" source="start_date" />
       <TextField label="End Date" source="end_date" />
+      <BooleanField source="deleted" />
       <EditButton />
       <ShowButton />
     </Datagrid>
@@ -92,6 +95,7 @@ export const Loaded_costEdit = ({ permissions, ...props }) => (
       <TextInput source="level" />
       <DateInput label="Start Date" source="start_date" />
       <DateInput label="End Date" source="end_date" />
+      {permissions === 'su' ? <BooleanInput source="deleted" /> : <></>}
     </SimpleForm>
   </Edit>
 );
