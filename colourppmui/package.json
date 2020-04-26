@@ -12,6 +12,7 @@
     "prop-types": "^15.7.2",
     "ra-data-hasura": "0.0.7",
     "ra-data-hasura-graphql": "^0.1.9",
+    "ra-input-json": "^0.2.8",
     "react": "^16.12.0",
     "react-admin": "^3.4.1",
     "react-dev-utils": "^10.2.1",

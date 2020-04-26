@@ -1,5 +1,5 @@
 import React from "react";
-import { List, Datagrid, ReferenceField, TextField } from "react-admin";
+import { List, Datagrid, ReferenceField, TextField, Filter, NullableBooleanInput, TextInput, ReferenceInput, SelectInput} from "react-admin";
 
 import Button from "@material-ui/core/Button";
 import { Link } from "react-router-dom";
@@ -28,7 +28,7 @@ const TagsField = ({ record }) => (
                   to={{
                     pathname: "/allocation",
                     search:
-                      '?filter=%7B"id"%3A' +
+                      '?filter=%7B"ids"%3A' +
                       encodeURIComponent(JSON.stringify(item.id)) +
                       "%7D"
                   }}
@@ -60,10 +60,30 @@ const EditEntityButton = ({ record }) => (
   </Button>
 );
 
+const EntityFilter = props => (
+  <Filter {...props}>
+    <TextInput label="Search" source="name" alwaysOn />
+    <NullableBooleanInput source="deleted" alwaysOn/>
+    <ReferenceInput label="entity" source="id" reference="entity" allowEmpty>
+      <SelectInput optionText="name" />
+    </ReferenceInput>
+    <ReferenceInput
+      label="entity_type"
+      source="entity_type_id"
+      reference="entity_type"
+      allowEmpty
+    >
+      <SelectInput optionText="name" />
+    </ReferenceInput>
+  </Filter>
+);
+
 export const ExceptionList = props => (
-  <List {...props}>
+  <List {...props} filters={<EntityFilter />} filterDefaultValues={{ deleted: false }}>
     <Datagrid>
-      <ReferenceField source="id" reference="entity">
+    <TextField source="id" />
+    <TextField source="name" />
+      <ReferenceField source="entity_type_id" reference="entity_type">
         <TextField source="name" />
       </ReferenceField>
       <TagsField source="allocations"></TagsField>

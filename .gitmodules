@@ -1,3 +1,6 @@
 [submodule "ra-data-hasura-graphql"]
 	path = ra-data-hasura-graphql
 	url = https://github.com/billwashere/ra-data-hasura-graphql.git
+[submodule "ra-input-json"]
+	path = ra-input-json
+	url = https://github.com/billwashere/ra-input-json.git
