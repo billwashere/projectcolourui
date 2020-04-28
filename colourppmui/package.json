@@ -11,13 +11,14 @@
     "graphql": "^15.0.0",
     "prop-types": "^15.7.2",
     "ra-data-hasura": "0.0.7",
-    "ra-data-hasura-graphql": "^0.1.9",
+    "ra-data-hasura-graphql": "file:../ra-data-hasura-graphql",
     "ra-input-json": "^0.2.8",
     "react": "^16.12.0",
     "react-admin": "^3.4.1",
     "react-dev-utils": "^10.2.1",
     "react-dom": "^16.12.0",
-    "react-scripts": "3.4.1"
+    "react-scripts": "3.4.1",
+    "redux-form": "^8.3.5"
   },
   "scripts": {
     "start": "react-scripts start",
