@@ -9,7 +9,7 @@ import {
   Datagrid,
   ReferenceField,
   ReferenceInput,
-  DateInput,
+  DateInput, DateField,
   TextField,
   EditButton,
   SimpleForm,
@@ -39,12 +39,10 @@ export const AllocationList = props => (
       <ReferenceField label="Entity b" source="entityb_id" reference="entity">
         <TextField source="name" />
       </ReferenceField>
-      <TextField source="start_date" />
-      <TextField source="end_date" />
+      <DateField source="start_date" />
+      <DateField source="end_date" />
       <TextField source="allocation" />
       <TextField source="commitment" />
-      <TextField source="created" />
-      <TextField source="updated" />
       <EditButton />
       <ShowButton />
     </Datagrid>
@@ -132,12 +130,12 @@ export const AllocationShow = props => (
       <ReferenceField label="Entity b" source="entityb_id" reference="entity">
         <TextField source="name" />
       </ReferenceField>
-      <TextField source="start_date" />
-      <TextField source="end_date" />
+      <DateField source="start_date" />
+      <DateField source="end_date" />
       <TextField source="allocation" />
       <TextField source="commitment" />
-      <TextField source="created" />
-      <TextField source="updated" />
+      <DateField source="created" />
+      <DateField source="updated" />
       <ReferenceManyField
         label="History"
         reference="allocation_log"
