@@ -20,6 +20,7 @@ import {
 } from "react-admin";
 import DeleteWithUndoButton from "./DeleteWithUndoButton";
 import { makeStyles } from "@material-ui/core/styles";
+
 const useStyles = makeStyles({
   toolbar: {
     display: "flex",
