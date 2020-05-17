@@ -40,8 +40,8 @@ import {
   AllocationShow,
 } from "./components/allocation";
 
-import { ExceptionList } from "./components/exception";
-//import { ProjectExceptionList } from "./components/projectalloc";
+import exception from "./components/exceptionold/";
+import exception2 from "./components/exception/";
 import { UserList, UserEdit, UserCreate, UserShow } from "./components/users";
 import authProvider from "./authProvider";
 import dashboard from "./components/dashboard";
@@ -100,12 +100,12 @@ function perm_map(perm) {
       <Resource
         options={{ label: "Resource Exceptions" }}
         name="vs_allocation_exception"
-        list={ExceptionList}
+        list={exception.list}
       />,
       <Resource
         options={{ label: "Project Exceptions" }}
         name="vs_project_allocation"
-        list={ExceptionList}
+        list={exception.list}
       />,
 
       <Resource
@@ -177,12 +177,12 @@ function perm_map(perm) {
       <Resource
         options={{ label: "Resource Exceptions" }}
         name="vs_allocation_exception"
-        list={ExceptionList}
+        list={exception.list}
       />,
       <Resource
         options={{ label: "Project Exceptions" }}
         name="vs_project_allocation"
-        list={ExceptionList}
+        list={exception.list}
       />,
 
       <Resource

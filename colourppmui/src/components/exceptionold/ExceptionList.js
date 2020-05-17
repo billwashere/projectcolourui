@@ -1,8 +1,20 @@
 import React from "react";
-import { List, Datagrid, ReferenceField, TextField, Filter, NullableBooleanInput, TextInput, ReferenceInput, SelectInput} from "react-admin";
+import {
+  List,
+  Datagrid,
+  ReferenceField,
+  TextField,
+  Filter,
+  NullableBooleanInput,
+  TextInput,
+  ReferenceInput,
+  SelectInput,
+} from "react-admin";
 
 import Button from "@material-ui/core/Button";
 import { Link } from "react-router-dom";
+import { stringify } from "query-string";
+import MyDatagrid from "../MyDatagrid"
 
 const TagsField = ({ record }) => (
   <div>
@@ -10,12 +22,12 @@ const TagsField = ({ record }) => (
       <table>
         {" "}
         <tr>
-          {record.allocations.map(item => (
+          {record.allocations.map((item) => (
             <th>{item.month}</th>
           ))}{" "}
         </tr>{" "}
         <tr>
-          {record.allocations.map(item => (
+          {record.allocations.map((item) => (
             <th
               style={
                 item.allocation > 1 ? { color: "red" } : { color: "green" }
@@ -27,10 +39,13 @@ const TagsField = ({ record }) => (
                   component={Link}
                   to={{
                     pathname: "/allocation",
-                    search:
-                      '?filter=%7B"ids"%3A' +
-                      encodeURIComponent(JSON.stringify(item.id)) +
-                      "%7D"
+                    search: stringify({
+                      page: 1,
+                      perPage: 25,
+                      sort: "id",
+                      order: "DESC",
+                      filter: JSON.stringify({ ids: item.id }),
+                    }),
                   }}
                 >
                   {item ? item.allocation.toFixed(2) : "No Alloc"}
@@ -49,21 +64,10 @@ const TagsField = ({ record }) => (
 );
 TagsField.defaultProps = { addLabel: true };
 
-const EditEntityButton = ({ record }) => (
-  <Button
-    component={Link}
-    to={{
-      pathname: `/entity/${record.id}/show`
-    }}
-  >
-    Edit
-  </Button>
-);
-
-const EntityFilter = props => (
+const EntityFilter = (props) => (
   <Filter {...props}>
     <TextInput label="Search" source="name" alwaysOn />
-    <NullableBooleanInput source="deleted" alwaysOn/>
+    <NullableBooleanInput source="deleted" alwaysOn />
     <ReferenceInput label="entity" source="id" reference="entity" allowEmpty>
       <SelectInput optionText="name" />
     </ReferenceInput>
@@ -72,22 +76,28 @@ const EntityFilter = props => (
       source="entity_type_id"
       reference="entity_type"
       allowEmpty
+      alwaysOn
     >
       <SelectInput optionText="name" />
     </ReferenceInput>
   </Filter>
 );
 
-export const ExceptionList = props => (
-  <List {...props} filters={<EntityFilter />} filterDefaultValues={{ deleted: false }}>
-    <Datagrid>
-    <TextField source="id" />
-    <TextField source="name" />
+const ExceptionList = (props) => (
+  <List
+    {...props}
+    filters={<EntityFilter />}
+    filterDefaultValues={{ deleted: false }}
+  >
+    <MyDatagrid>
+      <TextField source="id" />
+      <TextField source="name" />
       <ReferenceField source="entity_type_id" reference="entity_type">
         <TextField source="name" />
       </ReferenceField>
-      <TagsField source="allocations"></TagsField>
-      <EditEntityButton />
-    </Datagrid>
+     
+    </MyDatagrid>
   </List>
 );
+
+export default ExceptionList;
