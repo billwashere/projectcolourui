@@ -41,7 +41,6 @@ import {
 } from "./components/allocation";
 
 import exception from "./components/exceptionold/";
-import exception2 from "./components/exception/";
 import { UserList, UserEdit, UserCreate, UserShow } from "./components/users";
 import authProvider from "./authProvider";
 import dashboard from "./components/dashboard";
