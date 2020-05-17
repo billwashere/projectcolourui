@@ -37,7 +37,7 @@ const signIn = async (req, res) => {
 
   try {
     const results = await fetch(url, opts).then(res => res.json());
-    console.log(results);
+    //console.log(results);
     // return 401 error is username or password doesn't exist, or if password does
     // not match the password in our records
     if (results.data.check_password.length === 0) {
@@ -71,7 +71,7 @@ const signIn = async (req, res) => {
 
     // set the cookie as the token string, with a similar max age as the token
     // here, the max age is in milliseconds, so we multiply by 1000
-    res.cookie("token", token, { maxAge: jwtExpirySeconds * 1000 });
+    // res.cookie("token", token, { maxAge: jwtExpirySeconds * 1000 });
     res.json({ token: token });
     res.end();
   } catch (exception) {
@@ -128,8 +128,6 @@ const refresh = (req, res) => {
     return res.status(400).end();
   }
   // (END) The code uptil this point is the same as the first part of the `welcome` route
-  console.log("payload");
-  console.log(payload);
   // We ensure that a new token is not issued until enough time has elapsed
   // In this case, a new token will only be issued if the old token is within
   // 30 seconds of expiry. Otherwise, return a bad request status
@@ -142,8 +140,6 @@ const refresh = (req, res) => {
   }
 
   //todo:check if user still valid
-  console.log("payload");
-  console.log(payload["https://hasura.io/jwt/claims"]);
   // Now, create a new token for the current user, with a renewed expiration time
   const newToken = jwt.sign(
     {
