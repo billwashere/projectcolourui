@@ -4,6 +4,26 @@ import Typography from '@material-ui/core/Typography';
 import { crudGetOne, UserMenu, MenuItemLink } from 'react-admin';
 import SettingsIcon from '@material-ui/icons/Settings';
 
+import { makeStyles } from '@material-ui/core/styles';
+import Avatar from '@material-ui/core/Avatar';
+
+const useStyles = makeStyles({
+    avatar: {
+        height: 30,
+        width: 30,
+    },
+});
+
+const MyCustomIcon = (props) => {
+    const classes = useStyles();
+    return (
+        <Avatar
+            className={classes.avatar}
+            src="https://marmelab.com/images/avatars/adrien.jpg"
+        />
+    )
+};
+
 class MyUserMenuView extends Component {
     componentDidMount() {
         this.fetchProfile();
@@ -26,7 +46,7 @@ class MyUserMenuView extends Component {
         const { crudGetOne, profile, ...props } = this.props;
 
         return (
-            <UserMenu label={profile ? profile.nickname : ''} {...props}>
+            <UserMenu label={profile ? profile.name : ''} {...props}>
                 <MenuItemLink
                     to="/my-profile"
                     primaryText="Profile"
