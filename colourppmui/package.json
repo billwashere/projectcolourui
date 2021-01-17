@@ -24,7 +24,8 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "generate": "npx apollo schema:download --endpoint https://colour.heisamachine.com/v1/graphql --header \"X-Hasura-Admin-Secret: davina93!\""
   },
   "eslintConfig": {
     "extends": "react-app"

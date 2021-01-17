@@ -1,0 +1,17 @@
+CREATE OR REPLACE VIEW "public"."vs_project_allocation" AS 
+ SELECT entity.*,
+    ags.allocations
+   FROM (entity
+     LEFT JOIN ( SELECT json_agg(json_build_object('allocation', allocs.allocation, 'month', allocs.first_day_of_month, 'id', allocs.id)) AS allocations,
+            allocs.entity_id
+           FROM ( SELECT (sum(vw_d_allocation.allocation) / (count(DISTINCT vw_d_allocation.date_actual))::numeric) AS allocation,
+                    vw_d_allocation.first_day_of_month,
+                    vw_d_allocation.entity_id,
+                    array_agg(DISTINCT vw_d_allocation.id) AS id
+                   FROM vw_allocation_per_day vw_d_allocation
+                  GROUP BY vw_d_allocation.first_day_of_month, vw_d_allocation.entity_id
+                  ORDER BY vw_d_allocation.first_day_of_month) allocs
+          GROUP BY allocs.entity_id) ags ON ((ags.entity_id = entity.id)))
+  WHERE (entity.entity_type_id IN ( SELECT entity_type.id
+           FROM entity_type
+          WHERE (entity_type.allow_allocation <> true)));

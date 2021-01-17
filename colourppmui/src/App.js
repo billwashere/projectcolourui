@@ -83,13 +83,13 @@ const client = new ApolloClient({
           "X-Hasura-User-Id": id,
         },
       });
-    } else {
+    } /*else {
       operation.setContext({
         headers: {
           "x-hasura-admin-secret": "davina93!",
         },
       });
-    }
+    }*/
   },
 });
 
@@ -252,7 +252,7 @@ class App extends Component {
       localStorage.removeItem("username");
     }
     buildHasuraProvider({
-      client: client, //,  introspection: { schema }
+      client: client,  introspection: { schema }
     }).then((dataProvider) =>
       this.setState({ dataProvider: ColourDataProvider(dataProvider) })
     );
